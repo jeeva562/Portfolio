@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeeva G | 3D Interactive Portfolio</title>
+     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpg" href="/Assets/favicon.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+</head>
+<body class="text-gray-100">
+    <!-- FIXED: 3D Background Container -->
+    <div id="threejs-container"></div>
+    <div id="particles-js"></div>
+    
+    <!-- Animated Cursor -->
+    <div id="cursor" class="fixed w-8 h-8 rounded-full bg-white/10 border border-white/20 pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2 mix-blend-difference"></div>
+    
+    <!-- FIXED: Enhanced Navigation with Mobile Support -->
+    <nav class="fixed w-full glass-card z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold gradient-text hover-scale cursor-pointer">JG</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Home</a>
+                    <a href="#about" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">About</a>
+                    <a href="#skills" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Skills</a>
+                    <a href="#projects" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Projects</a>
+                    <a href="#playground" class="text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">Playground</a>
+                    <a href="#contact" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-toggle" class="text-gray-300 hover:text-white transition-all duration-300">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- FIXED: Enhanced Mobile Menu -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-black/90 z-50 backdrop-blur-lg">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="text-center space-y-8">
+                <a href="#home" class="mobile-nav-item block text-2xl text-gray-300 hover:text-white transition-all duration-300">Home</a>
+                <a href="#about" class="mobile-nav-item block text-2xl text-gray-300 hover:text-white transition-all duration-300">About</a>
+                <a href="#skills" class="mobile-nav-item block text-2xl text-gray-300 hover:text-white transition-all duration-300">Skills</a>
+                <a href="#projects" class="mobile-nav-item block text-2xl text-gray-300 hover:text-white transition-all duration-300">Projects</a>
+                <a href="#playground" class="mobile-nav-item block text-2xl text-gray-300 hover:text-white transition-all duration-300">Playground</a>
+                <a href="#contact" class="mobile-nav-item block text-2xl text-white bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-full mx-auto w-max transition-all duration-300">Contact</a>
+                <button id="close-menu" class="absolute top-8 right-8 text-gray-300 hover:text-white transition-all duration-300">
+                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center relative z-10 hero-content">
+            <div class="glass-card rounded-2xl p-10 inline-block">
+                <div class="floating mb-6">
+                    <div class="w-40 h-40 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-2xl">
+                        <img src="/Assets/pic.JPG" alt="Profile" class="w-full h-full object-fit">
+                    </div>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    <span class="gradient-text">Jeeva G</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8">Flutter & Web Developer | UI/UX Designer</p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#projects" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-code mr-2"></i> View Work
+                    </a>
+                    <a href="#contact" class="px-6 py-3 border-2 border-blue-500 text-blue-500 rounded-full font-medium hover:bg-blue-900/20 transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Contact Me
+                    </a>
+                </div>
+            </div>
+            <div class="mt-20 scroll-indicator">
+                <a href="#about" class="text-gray-300 hover:text-white transition">
+                    <i class="fas fa-chevron-down text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">About Me</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-4"> Developer | Designer</h3>
+                    <p class="text-gray-300 mb-6">
+                        I'm a passionate BTech Computer Technology student with expertise in Flutter, Web Dev, and UI/UX design. 
+                        My journey in technology began when I wrote my first program, and since then, I've been fascinated by 
+                        how code can create solutions.
+                    </p>
+                    <p class="text-gray-300 mb-6">
+                        With a CGPA of 7.51 and experience in both mobile and web development, I bring creative solutions 
+                        to technical challenges.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-900/20 p-4 rounded-lg text-center border border-blue-500/20">
+                            <i class="fas fa-mobile-alt text-blue-400 text-2xl mb-2"></i>
+                            <p class="font-medium">Mobile Apps</p>
+                        </div>
+                        <div class="bg-purple-900/20 p-4 rounded-lg text-center border border-purple-500/20">
+                            <i class="fas fa-code text-purple-400 text-2xl mb-2"></i>
+                            <p class="font-medium">Web Dev</p>
+                        </div>
+                        <div class="bg-green-900/20 p-4 rounded-lg text-center border border-green-500/20">
+                            <i class="fas fa-paint-brush text-green-400 text-2xl mb-2"></i>
+                            <p class="font-medium">UI/UX</p>
+                        </div>
+                        <div class="bg-yellow-900/20 p-4 rounded-lg text-center border border-yellow-500/20">
+                            <i class="fas fa-brain text-yellow-400 text-2xl mb-2"></i>
+                            <p class="font-medium">AI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-semibold mb-6">Education</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-xl font-medium">B.Tech Computer Technology</h4>
+                                <p class="text-gray-400">Bannari Amman Institute of Technology | 2021-2024</p>
+                                <p class="text-blue-400">CGPA: 7.51</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-medium">Diploma in Computer Science</h4>
+                                <p class="text-gray-400">Coimbatore Institute of Technology | 2018-2021</p>
+                                <p class="text-purple-400">Percentage: 79%</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-medium">SSLC</h4>
+                                <p class="text-gray-400">Sowdambikaa Matriculation HSS | 2017-2018</p>
+                                <p class="text-green-400">Percentage: 83.4%</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-full shadow-xl">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">My Skills</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-laptop-code mr-3 gradient-text"></i>
+                        <span>Technical Skills</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Flutter Development</span>
+                                <span class="text-gray-400">70%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full skill-bar" data-width="70%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">ReactJS</span>
+                                <span class="text-gray-400">50%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-purple-500 h-2 rounded-full skill-bar" data-width="50%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Html/CSS</span>
+                                <span class="text-gray-400">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-red-500 h-2 rounded-full skill-bar" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">UI/UX Design</span>
+                                <span class="text-gray-400">80%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full skill-bar" data-width="80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">JavaScript</span>
+                                <span class="text-gray-400">70%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full skill-bar" data-width="70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-tools mr-3 gradient-text"></i>
+                        <span>Tools & Technologies</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-3 mb-8">
+                        <span class="bg-purple-900/30 text-purple-400 px-4 py-2 rounded-full border border-purple-500/30">Figma</span>
+                        <span class="bg-green-900/30 text-green-400 px-4 py-2 rounded-full border border-green-500/30">Git</span>
+                        <span class="bg-yellow-900/30 text-yellow-400 px-4 py-2 rounded-full border border-yellow-500/30">Firebase</span>
+                        <span class="bg-red-900/30 text-red-400 px-4 py-2 rounded-full border border-red-500/30">Canva</span>
+                        <span class="bg-indigo-900/30 text-indigo-400 px-4 py-2 rounded-full border border-indigo-500/30">AI</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold mb-6 flex items-center">
+                        <i class="fas fa-user-tie mr-3 gradient-text"></i>
+                        <span>Soft Skills</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-lightbulb text-blue-400 mr-3"></i>
+                            <span>Creative Thinking</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-bullseye text-purple-400 mr-3"></i>
+                            <span>Problem Solving</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-users text-green-400 mr-3"></i>
+                            <span>Teamwork</span>
+                        </div>
+                        <div class="bg-gray-800/30 p-3 rounded-lg flex items-center border border-gray-700">
+                            <i class="fas fa-comments text-yellow-400 mr-3"></i>
+                            <span>Communication</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Featured Projects</h2>
+            
+            <!-- Temple Finder -->
+            <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+                <div class="p-8 flex flex-col justify-center">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-500/20 p-2 rounded-lg mr-4">
+                            <i class="fas fa-place-of-worship text-blue-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Temple Finder App</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        A Flutter application that provides 360° panoramic views of temples, helping pilgrims virtually 
+                        explore sacred sites before visiting.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+                        <span class="bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full text-sm">Google Street View</span>
+                        <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Cross-Platform</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/jeeva562/Temple_Finder" class="text-blue-400 hover:text-blue-300 transition flex items-center">
+                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/jeeva562/Temple_Finder" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+                            <i class="fab fa-github mr-2"></i> View Code
+                        </a>
+                    </div>
+                </div>
+                <div class="relative min-h-80 bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center">
+                    <div class="relative z-10 p-8">
+                        <img src="/Assets/temple finder.png" alt="Temple Finder App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NFC App -->
+            <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+                <div class="p-8 flex flex-col justify-center order-2 md:order-1">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-500/20 p-2 rounded-lg mr-4">
+                            <i class="fas fa-wifi text-purple-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">NFC Tag Reader/Writer</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        A cross-platform mobile application that reads and writes NFC tags, capable of storing various 
+                        data types including URLs and UPI payment links.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+                        <span class="bg-pink-900/30 text-pink-400 px-3 py-1 rounded-full text-sm">NFC</span>
+                        <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Mobile</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-purple-400 hover:text-purple-300 transition flex items-center">
+                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+                            <i class="fab fa-github mr-2"></i> View Code
+                        </a>
+                    </div>
+                </div>
+                <div class="relative min-h-80 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center order-1 md:order-2">
+                    <div class="relative z-10 p-8">
+                        <img src="/Assets/nfctag.png" alt="NFC App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Movie App -->
+            <div class="glass-card rounded-2xl overflow-hidden grid md:grid-cols-2 gap-8">
+                <div class="p-8 flex flex-col justify-center">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-red-500/20 p-2 rounded-lg mr-4">
+                            <i class="fas fa-film text-red-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">Movie Discovery App</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">
+                        A ReactJS application that allows users to browse, search, and discover movies with detailed 
+                        information and multimedia content.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">ReactJS</span>
+                        <span class="bg-red-900/30 text-red-400 px-3 py-1 rounded-full text-sm">JavaScript</span>
+                        <span class="bg-orange-900/30 text-orange-400 px-3 py-1 rounded-full text-sm">TMDB API</span>
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/jeeva562/movie_app_main" class="text-red-400 hover:text-red-300 transition flex items-center">
+                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/jeeva562/movie_app_main" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+                            <i class="fab fa-github mr-2"></i> View Code
+                        </a>
+                    </div>
+                </div>
+                <div class="relative min-h-80 bg-gradient-to-br from-red-900/40 to-orange-900/40 flex items-center justify-center">
+                    <div class="relative z-10 p-8">
+                        <img src="/Assets/movieapp.png" alt="Movie App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coding Playground -->
+    <section id="playground" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Coding Playground</h2>
+            
+            <div class="glass-card rounded-2xl overflow-hidden p-8">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- Code Editor -->
+                    <div class="bg-gray-900 rounded-xl overflow-hidden shadow-2xl">
+                        <div class="bg-gray-800 px-4 py-3 flex items-center border-b border-gray-700">
+                            <div class="flex space-x-2 mr-4">
+                                <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                            </div>
+                            <span class="text-gray-400 text-sm">flutter_demo.dart</span>
+                        </div>
+                        <div class="p-4 font-mono text-gray-300 h-96 overflow-auto text-sm">
+                            <pre><code id="code-content">import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Temple Finder',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: TempleViewScreen(),
+    );
+  }
+}
+
+class TempleViewScreen extends StatefulWidget {
+  @override
+  _TempleViewScreenState createState() => _TempleViewScreenState();
+}
+
+class _TempleViewScreenState extends State<TempleViewScreen> {
+  int _selectedIndex = 0;
+  
+  final List<Widget> _pages = [
+    TempleList(),
+    MapView(),
+    Favorites(),
+    Profile(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Temple Finder'),
+      ),
+      body: Center(
+        child: _pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.temple_buddhist),
+            label: 'Temples',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}</code></pre>
+                        </div>
+                        <div class="bg-gray-800 px-4 py-3 flex justify-between items-center border-t border-gray-700">
+                            <span class="text-gray-400 text-sm">Dart</span>
+                            <button id="run-code" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition flex items-center">
+                                <i class="fas fa-play mr-2"></i> Run Code
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Output -->
+                    <div class="flex flex-col">
+                        <div class="bg-gray-900 rounded-xl overflow-hidden shadow-2xl flex-1">
+                            <div class="bg-gray-800 px-4 py-3 flex items-center border-b border-gray-700">
+                                <span class="text-gray-400 text-sm">Output</span>
+                            </div>
+                            <div id="code-output" class="p-4 h-96 overflow-auto flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-laptop-code text-5xl text-gray-600 mb-4"></i>
+                                    <p class="text-gray-500">Run the code to see output</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                            <button id="view-device" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition flex-1 flex items-center justify-center">
+                                <i class="fas fa-mobile-alt mr-2"></i> View on Device
+                            </button>
+                            <button id="view-source" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition flex-1 flex items-center justify-center">
+                                <i class="fab fa-github mr-2"></i> View Source
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interactive Games -->
+            <div class="mt-20">
+                <h3 class="text-3xl font-bold text-center mb-12 gradient-text">Interactive Challenges</h3>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Code Quiz -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-blue-500/20 p-3 rounded-full mr-4">
+                                <i class="fas fa-question-circle text-blue-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold">Flutter Quiz</h4>
+                        </div>
+                        <p class="text-gray-300 mb-6">Test your knowledge of Flutter development with this interactive quiz.</p>
+                        <button id="start-quiz" class="w-full bg-blue-600/20 text-blue-400 py-3 rounded-lg hover:bg-blue-600/30 transition border border-blue-500/30">
+                            Start Quiz <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <div id="quiz-container" class="hidden mt-6">
+                            <div id="quiz-question" class="font-medium mb-4 text-lg"></div>
+                            <div id="quiz-options" class="space-y-3"></div>
+                            <div id="quiz-result" class="mt-4 font-bold hidden"></div>
+                            <button id="quiz-next" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hidden w-full">
+                                Next Question
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Puzzle -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-purple-500/20 p-3 rounded-full mr-4">
+                                <i class="fas fa-puzzle-piece text-purple-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold">Code Puzzle</h4>
+                        </div>
+                        <p class="text-gray-300 mb-6">Rearrange the code snippets to solve the programming challenge.</p>
+                        <button id="start-puzzle" class="w-full bg-purple-600/20 text-purple-400 py-3 rounded-lg hover:bg-purple-600/30 transition border border-purple-500/30">
+                            Solve Puzzle <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <div id="puzzle-container" class="hidden mt-6">
+                            <div class="bg-gray-800/50 p-3 rounded mb-4 text-sm">
+                                <p>Rearrange these lines to create a working Flutter widget:</p>
+                            </div>
+                            <div id="puzzle-pieces" class="space-y-2"></div>
+                            <div id="puzzle-feedback" class="mt-3 text-sm hidden"></div>
+                            <button id="puzzle-check" class="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm w-full">
+                                Check Solution
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Memory Game -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-green-500/20 p-3 rounded-full mr-4">
+                                <i class="fas fa-brain text-green-400"></i>
+                            </div>
+                            <h4 class="text-xl font-bold">Syntax Memory</h4>
+                        </div>
+                        <p class="text-gray-300 mb-6">Match programming syntax pairs in this memory card game.</p>
+                        <button id="start-memory" class="w-full bg-green-600/20 text-green-400 py-3 rounded-lg hover:bg-green-600/30 transition border border-green-500/30">
+                            Play Game <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <div id="memory-game" class="hidden mt-6">
+                            <div class="grid grid-cols-4 gap-2" id="memory-board"></div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <span id="memory-score" class="text-sm text-gray-400">Pairs found: 0/8</span>
+                                <button id="memory-reset" class="bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Let's Connect</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div class="glass-card p-8 rounded-2xl">
+                    <h3 class="text-2xl font-semibold mb-6">Tell Me Something</h3>
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-gray-300 mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">Email Address</label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-gray-300 mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-300 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white resize-none"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-300 hover:scale-105">
+                                Send Message <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                            <div id="form-notification" class="mt-3 text-center hidden"></div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="space-y-6">
+                    <div class="glass-card p-8 rounded-2xl">
+                        <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-blue-500/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg">Address</h4>
+                                    <p class="text-gray-400">Thalaimalaipatti, Trichy-621215</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-500/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-envelope text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-lg">Email</h4>
+                                    <p class="text-gray-400">jeevaranjith101124@gmail.com/p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h3 class="text-xl font-semibold mb-4">Connect With Links</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="https://www.linkedin.com/in/jeeva-g/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-blue-600/30 hover:text-white transition border border-gray-700">
+                                <i class="fab fa-linkedin-in text-lg"></i>
+                            </a>
+                            <a href="https://www.github.com/jeeva562/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-gray-600/30 hover:text-white transition border border-gray-700">
+                                <i class="fab fa-github text-lg"></i>
+                            </a>
+                            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jeevaranjith101124@gmail.com" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-blue-400/30 hover:text-white transition border border-gray-700">
+                                <i class="fas fa-envelope text-lg"></i>
+                            </a>
+                            <a href="https://www.instagram.com/jeevaranjith_4/" class="w-12 h-12 bg-gray-800/50 rounded-full flex items-center justify-center hover:bg-pink-600/30 hover:text-white transition border border-gray-700">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h3 class="text-xl font-semibold mb-4">Hobbies & Interests</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="bg-blue-900/30 text-blue-400 px-4 py-2 rounded-full flex items-center border border-blue-500/30 text-sm">
+                                <i class="fas fa-leaf mr-2"></i> Gardening
+                            </span>
+                            <span class="bg-purple-900/30 text-purple-400 px-4 py-2 rounded-full flex items-center border border-purple-500/30 text-sm">
+                                <i class="fas fa-film mr-2"></i> Anime
+                            </span>
+                            <span class="bg-green-900/30 text-green-400 px-4 py-2 rounded-full flex items-center border border-green-500/30 text-sm">
+                                <i class="fas fa-code mr-2"></i> Coding
+                            </span>
+                            <span class="bg-yellow-900/30 text-yellow-400 px-4 py-2 rounded-full flex items-center border border-yellow-500/30 text-sm">
+                                <i class="fas fa-paint-brush mr-2"></i> Design
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-900/80 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h2 class="text-2xl font-bold gradient-text hover-scale inline-block cursor-pointer">Jeeva G</h2>
+                    <p class="text-gray-400 mt-2"> Developer & Designer</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://www.github.com/jeeva562/" class="text-gray-400 hover:text-white transition transform hover:scale-125">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/jeeva-g/" class="text-gray-400 hover:text-white transition transform hover:scale-125">
+                        <i class="fab fa-linkedin-in text-xl"></i>
+                    </a>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jeevaranjith101124@gmail.com" class="text-gray-400 hover:text-white transition transform hover:scale-125">
+                        <i class="fas fa-envelope text-xl"></i>
+                    </a>
+                    <a href="https://www.instagram.com/jeevaranjith_4/" class="text-gray-400 hover:text-white transition transform hover:scale-125">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Jeeva G. All rights reserved.</p>
+                <p class="mt-2">Made with <i class="fas fa-heart text-red-500"></i></p>
+            </div>
+        </div>
+    </footer>
+
+  
+    </body>
+      <script src="app.js"></script><script></script>
+    </html>   
+       
