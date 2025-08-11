@@ -193,3 +193,57 @@
             transform: translateY(0);
             opacity: 1;
         }
+      
+        /*   Hex  hero sec */
+         .hexagon-button {
+        position: relative;
+        width: 160px;
+        height: 92px;
+        clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-width: 1px;
+    }
+    .hexagon-button:hover {
+        transform: translateY(-3px);
+    }
+    .hexagon-content {
+        transform: translateY(2px);
+        text-align: center;
+        padding: 0 20px;
+    }
+    
+    /* Marquee animation */
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+        animation: marquee 20s linear infinite;
+    }
+    
+    /* Glitch effect on hover */
+    @keyframes glitch {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+    }
+    .relative:hover img {
+        animation: glitch 0.5s linear infinite;
+    }
+
+      @keyframes fade-up {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+        animation: fade-up 1.2s ease-out forwards;
+        animation-delay: 0.6s;
+    }
+
+    /* end hero sec*/
