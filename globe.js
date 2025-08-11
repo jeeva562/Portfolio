@@ -1,94 +1,261 @@
-import createGlobe from 'https://unpkg.com/cobe@0.6.3/dist/cobe.esm.js';
-
-    const canvas  = document.getElementById('globe-canvas');
-    const wrap    = document.getElementById('wrap');
-    const loader  = document.getElementById('loader');
-    const btn     = document.getElementById('toggle');
-    const icon    = btn.querySelector('i');
-    const label   = btn.querySelector('span');
-
-    /* size */
-    const DPR = Math.min(2, window.devicePixelRatio || 1);
-    let sizePx;
-    function resize(){
-      const w = wrap.clientWidth;
-      sizePx = w * DPR;
-      canvas.width  = sizePx;
-      canvas.height = sizePx;
-      canvas.style.width = canvas.style.height = w+'px';
-      globe?.resize(sizePx,sizePx);
-    }
-    window.addEventListener('resize', resize);
-
-    /* rotation state */
-    let phi=0, theta=0.3, tPhi=0, tTheta=0.3;
-    const speed=0.005;
-    let pointer=false, sx=0, sy=0, sPhi=0, sTheta=0;
-
-    /* motion pref */
-    const autoStart = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let autoRotate = autoStart;
-
-    /* create globe */
-    resize();
-    const globe = createGlobe(canvas,{
-      devicePixelRatio:DPR, width:sizePx, height:sizePx,
-      phi:0, theta:0,
-      dark:matchMedia('(prefers-color-scheme: dark)').matches?1:0,
-      diffuse:1.2, mapSamples:16000, mapBrightness:6,
-      baseColor:[0.3,0.3,0.3], markerColor:[1,0.5,1], glowColor:[1,1,1],
-      markers:[
-        {location:[40.71,-74.0],size:0.05},
-        {location:[51.5,-0.1],size:0.05},
-        {location:[35.68,139.65],size:0.05},
-        {location:[-33.86,151.21],size:0.05}
-      ],
-      onRender:(s)=>{
-        if(autoRotate&&!pointer) tPhi += speed;
-        phi   += (tPhi   - phi  )*0.08;
-        theta += (tTheta - theta)*0.08;
-        s.phi=phi; s.theta=theta;
-      }
-    });
-    /* hide loader */
-    wrap.classList.add('loaded');
-
-    /* pointer controls */
-    canvas.addEventListener('pointerdown',e=>{
-      pointer=true;
-      sx=e.clientX; sy=e.clientY; sPhi=tPhi; sTheta=tTheta;
-      canvas.setPointerCapture(e.pointerId); canvas.style.cursor='grabbing';
-    });
-    canvas.addEventListener('pointermove',e=>{
-      if(!pointer)return;
-      const dx=(e.clientX-sx)/canvas.clientWidth;
-      const dy=(e.clientY-sy)/canvas.clientHeight;
-      tPhi   = sPhi   + dx*Math.PI*2;
-      tTheta = Math.max(-Math.PI/2, Math.min(Math.PI/2, sTheta+dy*Math.PI));
-    });
-    ['pointerup','pointerleave','pointercancel'].forEach(ev=>{
-      canvas.addEventListener(ev,()=>{pointer=false;canvas.style.cursor='grab'});});
-
-    /* keyboard */
-    canvas.addEventListener('keydown',e=>{
-      const step=0.25;
-      switch(e.key){
-        case'ArrowLeft':  tPhi-=step;break;
-        case'ArrowRight': tPhi+=step;break;
-        case'ArrowUp':    tTheta=Math.max(-Math.PI/2,tTheta-step);break;
-        case'ArrowDown':  tTheta=Math.min( Math.PI/2,tTheta+step);break;
-        case' ':
-        case'Enter': toggle();break;
-        default:return;
-      }
-      e.preventDefault();
-    });
-
-    /* toggle */
-    function toggle(){
-      autoRotate=!autoRotate;
-      icon.className = autoRotate?'fas fa-pause':'fas fa-play';
-      label.textContent = autoRotate?'Pause Rotation':'Resume Rotation';
-    }
-    btn.addEventListener('click',toggle);
-    toggle(); /* set initial icon/label */
+document.addEventListener('DOMContentLoaded', () => {
+            // Configuration
+            const config = {
+                autoRotate: true,
+                rotationSpeed: 0.2,
+                enableZoom: true,
+                enablePan: true,
+                reduceMotion: false,
+                isMobile: window.innerWidth <= 768
+            };
+            
+            // Elements
+            const canvas = document.getElementById('earth-globe');
+            const loadingOverlay = document.getElementById('loading');
+            const reduceMotionBtn = document.getElementById('reduce-motion');
+            const toggleRotationBtn = document.getElementById('toggle-rotation');
+            const zoomInBtn = document.getElementById('zoom-in');
+            const zoomOutBtn = document.getElementById('zoom-out');
+            
+            // Scene setup
+            const scene = new THREE.Scene();
+            
+            // Adjust camera for mobile
+            const camera = new THREE.PerspectiveCamera(
+                45, 
+                canvas.clientWidth / canvas.clientHeight, 
+                0.1, 
+                1000
+            );
+            
+            // Position camera differently for mobile
+            if (config.isMobile) {
+                camera.position.z = 4.5;
+            } else {
+                camera.position.z = 3.5;
+            }
+            
+            const renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas, 
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            // Adjust pixel ratio for performance on mobile
+            if (config.isMobile) {
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            } else {
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            }
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const sunLight = new THREE.DirectionalLight(0xffffff, 1);
+            sunLight.position.set(5, 3, 5);
+            scene.add(sunLight);
+            
+            // Earth group
+            const earthGroup = new THREE.Group();
+            scene.add(earthGroup);
+            
+            // Create Earth
+            const createEarth = () => {
+                // Adjust geometry detail for mobile
+                const segments = config.isMobile ? 48 : 64;
+                
+                // Earth sphere
+                const earthGeometry = new THREE.SphereGeometry(1, segments, segments);
+                
+                // Load textures
+                const textureLoader = new THREE.TextureLoader();
+                
+                // Use smaller texture for mobile if available (but we'll use the same for simplicity)
+                const earthTexture = textureLoader.load(EARTH_TEXTURE, () => {
+                    loadingOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 500);
+                });
+                
+                const earthBump = textureLoader.load(EARTH_BUMP);
+                const earthSpec = textureLoader.load(EARTH_SPEC);
+                const cloudTexture = textureLoader.load(CLOUD_TEXTURE);
+                
+                // Earth material
+                const earthMaterial = new THREE.MeshPhongMaterial({
+                    map: earthTexture,
+                    bumpMap: earthBump,
+                    bumpScale: config.isMobile ? 0.03 : 0.05,
+                    specularMap: earthSpec,
+                    specular: new THREE.Color(0x333333),
+                    shininess: 5
+                });
+                
+                const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+                earthGroup.add(earth);
+                
+                // Clouds
+                const cloudGeometry = new THREE.SphereGeometry(1.005, segments, segments);
+                const cloudMaterial = new THREE.MeshPhongMaterial({
+                    map: cloudTexture,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                earthGroup.add(clouds);
+                
+                // Stars - fewer on mobile
+                const starCount = config.isMobile ? 2000 : 5000;
+                const starGeometry = new THREE.BufferGeometry();
+                const starVertices = [];
+                
+                for (let i = 0; i < starCount; i++) {
+                    const x = (Math.random() - 0.5) * 2000;
+                    const y = (Math.random() - 0.5) * 2000;
+                    const z = (Math.random() - 0.5) * 2000;
+                    
+                    starVertices.push(x, y, z);
+                }
+                
+                starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                
+                const starMaterial = new THREE.PointsMaterial({
+                    color: 0xffffff,
+                    size: config.isMobile ? 1.0 : 1.2,
+                    sizeAttenuation: true
+                });
+                
+                const stars = new THREE.Points(starGeometry, starMaterial);
+                scene.add(stars);
+                
+                return { earth, clouds };
+            };
+            
+            // Initialize earth
+            const { earth, clouds } = createEarth();
+            
+            // Controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = config.isMobile ? 2.5 : 2.0;
+            controls.maxDistance = config.isMobile ? 7.0 : 8.0;
+            controls.enablePan = config.enablePan;
+            controls.enableZoom = config.enableZoom;
+            
+            // Mouse movement tracking
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetRotationX = 0;
+            let targetRotationY = 0;
+            
+            const onMouseMove = (event) => {
+                if (config.reduceMotion) return;
+                
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+                
+                targetRotationY = mouseX * 0.5;
+                targetRotationX = mouseY * 0.2;
+            };
+            
+            window.addEventListener('mousemove', onMouseMove);
+            
+            // Touch events for mobile
+            const onTouchMove = (event) => {
+                if (config.reduceMotion) return;
+                
+                if (event.touches.length === 1) {
+                    mouseX = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    mouseY = (event.touches[0].clientY / window.innerHeight) * 2 - 1;
+                    
+                    targetRotationY = mouseX * 0.5;
+                    targetRotationX = mouseY * 0.2;
+                }
+            };
+            
+            window.addEventListener('touchmove', onTouchMove, { passive: true });
+            
+            // Handle window resize
+            const onWindowResize = () => {
+                // Update config for mobile detection
+                config.isMobile = window.innerWidth <= 768;
+                
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                
+                // Adjust pixel ratio for performance on mobile
+                if (config.isMobile) {
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+                } else {
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                }
+            };
+            
+            window.addEventListener('resize', onWindowResize);
+            
+            // Mobile zoom controls
+            zoomInBtn.addEventListener('click', () => {
+                camera.position.z -= 0.5;
+                if (camera.position.z < controls.minDistance) {
+                    camera.position.z = controls.minDistance;
+                }
+            });
+            
+            zoomOutBtn.addEventListener('click', () => {
+                camera.position.z += 0.5;
+                if (camera.position.z > controls.maxDistance) {
+                    camera.position.z = controls.maxDistance;
+                }
+            });
+            
+            // Accessibility controls
+            reduceMotionBtn.addEventListener('click', () => {
+                config.reduceMotion = !config.reduceMotion;
+                reduceMotionBtn.innerHTML = config.reduceMotion ? 
+                    '<i class="fas fa-wheelchair"></i> Reduced Motion' : 
+                    '<i class="fas fa-running"></i> Reduce Motion';
+                
+                if (config.reduceMotion) {
+                    config.autoRotate = false;
+                    toggleRotationBtn.innerHTML = '<i class="fas fa-play"></i> Start Rotation';
+                }
+            });
+            
+            toggleRotationBtn.addEventListener('click', () => {
+                config.autoRotate = !config.autoRotate;
+                toggleRotationBtn.innerHTML = config.autoRotate ? 
+                    '<i class="fas fa-pause"></i> Pause Rotation' : 
+                    '<i class="fas fa-play"></i> Start Rotation';
+            });
+            
+            // Animation loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+                
+                // Smooth rotation towards target
+                earthGroup.rotation.y += (targetRotationY - earthGroup.rotation.y) * 0.05;
+                earthGroup.rotation.x += (targetRotationX - earthGroup.rotation.x) * 0.05;
+                
+                // Auto-rotation
+                if (config.autoRotate && !config.reduceMotion) {
+                    earthGroup.rotation.y += 0.001 * config.rotationSpeed;
+                }
+                
+                // Cloud rotation
+                if (clouds) {
+                    clouds.rotation.y += 0.0005;
+                }
+                
+                controls.update();
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+        });

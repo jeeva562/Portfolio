@@ -9,7 +9,8 @@
     <title>Jeeva G | Portfolio</title>
      <link rel="stylesheet" href="style.css">
      <link rel="stylesheet" href="globe.css" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-dRvvefSfa1fmutnwrK9lNuPl6jMSC6H5Fm2tZ4yG7o6+8WV+Aqs2F3L4DhhuFGozoJB0Vk69yC6yYH7Xn4n4hg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
      <link rel="preload" as="image" href="/Assets/pic.JPG" type="image/jpg">
      <link rel="icon" type="image/x-icon"  href="/Assets/favicon.ico">
      <link rel="shortcut icon" href="/Assets/favicon.ico" type="image/x-icon">
@@ -19,10 +20,20 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/Assets/android-chrome-512x512.png">
     <link rel="apple-touch-icon" type="image/png"  href="/Assets/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        const EARTH_TEXTURE = "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg";
+        const EARTH_BUMP = "https://threejs.org/examples/textures/planets/earth_normal_2048.jpg";
+        const EARTH_SPEC = "https://threejs.org/examples/textures/planets/earth_specular_2048.jpg";
+        const CLOUD_TEXTURE = "https://threejs.org/examples/textures/planets/earth_clouds.png";
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"></noscript>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <meta name="google-site-verification" content="XoVZSrMHvgfzqk4yTp19PjXZw3mGzX0YUJqGlf2AFSw" />
     <!-- Google tag (gtag.js) -->
@@ -49,9 +60,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGD3G9WL"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
+
     <!--  3D Background Container -->
-    <div id="threejs-container"></div>
-    <div id="particles-js"></div>
+    <!-- <div id="threejs-container"></div>  -->
+    <div id="particles-js"></div> 
     
     <!-- Animated Cursor -->
     <div id="cursor" class="fixed w-8 h-8 rounded-full bg-white/10 border border-white/20 pointer-events-none z-50 transform -translate-x-1/2 -translate-y-1/2 mix-blend-difference"></div>
@@ -846,35 +858,36 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
 
         
   <!-- ===== GLOBE SECTION ===== -->
-  <section class="py-20">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <h2 class="text-4xl font-bold mb-8 gradient-text">Explore the World</h2>
-
-      <!-- canvas wrapper -->
-      <div id="wrap" class="w-full max-w-[600px] mx-auto aspect-square relative">
-        <canvas id="globe-canvas" tabindex="0"
-                aria-label="Interactive 3-D globe" role="img"
-                class="w-full h-full rounded-2xl shadow-xl"></canvas>
-        <!-- loader -->
-        <div id="loader"
-             class="absolute inset-0 flex flex-col items-center justify-center">
-          <div class="spinner mb-4"></div>
-          <p class="text-gray-400">Loading globe…</p>
+        <div class="container">
+        
+        <div class="globe-container">
+            <div class="loading-overlay" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">Loading Earth...</div>
+            </div>
+            
+            <div class="accessibility-options">
+                <button class="a11y-btn" id="reduce-motion">
+                    <i class="fas fa-running"></i> Reduce Motion
+                </button>
+                <button class="a11y-btn" id="toggle-rotation">
+                    <i class="fas fa-pause"></i> Pause Rotation
+                </button>
+            </div>
+            
+            <!-- Mobile touch controls -->
+            <div class="mobile-controls">
+                <button class="mobile-control-btn" id="zoom-in">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="mobile-control-btn" id="zoom-out">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+            
+            <canvas id="earth-globe"></canvas>   
         </div>
-      </div>
-
-      <!-- toggle button -->
-      <button id="toggle" class="mt-8 inline-flex items-center gap-2
-                                bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-full
-                                hover:scale-105 transition">
-        <i class="fas fa-pause"></i><span>Pause Rotation</span>
-      </button>
-      <p class="sr-only">
-        Drag the globe to rotate. Focus and use arrow keys to rotate with keyboard.
-        Use the button to pause or resume automatic rotation.
-      </p>
     </div>
-  </section>
 
     <!-- Footer -->
     <footer class="py-12 bg-gray-900/80 border-t border-gray-800">
@@ -906,8 +919,8 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
         </div>
     </footer>
 
-        <script type="module" src="globe.js"></script>
-       <script src="app.js"></script><script></script>   
+        <script src="globe.js"></script>
+       <script src="app.js"></script>
     </body>
     </html>   
        
