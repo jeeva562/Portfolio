@@ -8,6 +8,8 @@
     <link rel="canonical" href="https://jeevag-portfolio.netlify.app/">
     <title>Jeeva G | Portfolio</title>
      <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="globe.css" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
      <link rel="preload" as="image" href="/Assets/pic.JPG" type="image/jpg">
      <link rel="icon" type="image/x-icon"  href="/Assets/favicon.ico">
      <link rel="shortcut icon" href="/Assets/favicon.ico" type="image/x-icon">
@@ -398,112 +400,135 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Projects Section -->
     <section id="projects" class="py-20 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Featured Projects</h2>
-            
-            <!-- Temple Finder -->
-            <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
-                <div class="p-8 flex flex-col justify-center">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-blue-500/20 p-2 rounded-lg mr-4">
-                            <i class="fas fa-place-of-worship text-blue-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold">Temple Finder App</h3>
-                    </div>
-                    <p class="text-gray-300 mb-6">
-                        A Flutter application that provides 360° panoramic views of temples, helping pilgrims virtually 
-                        explore sacred sites before visiting.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
-                        <span class="bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full text-sm">Google Street View</span>
-                        <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Cross-Platform</span>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="https://github.com/jeeva562/Temple_Finder" class="text-blue-400 hover:text-blue-300 transition flex items-center">
-                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
-                        </a>
-                        <a href="https://github.com/jeeva562/Temple_Finder" class="text-gray-400 hover:text-gray-300 transition flex items-center">
-                            <i class="fab fa-github mr-2"></i> View Code
-                        </a>
-                    </div>
-                </div>
-                <div class="relative min-h-80 bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center">
-                    <div class="relative z-10 p-8">
-                        <img src="/Assets/temple finder.png" alt="Temple Finder App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
-                    </div>
-                </div>
-            </div>
-            
-            <!-- NFC App -->
-            <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
-                <div class="p-8 flex flex-col justify-center order-2 md:order-1">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-purple-500/20 p-2 rounded-lg mr-4">
-                            <i class="fas fa-wifi text-purple-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold">NFC Tag Reader/Writer</h3>
-                    </div>
-                    <p class="text-gray-300 mb-6">
-                        A cross-platform mobile application that reads and writes NFC tags, capable of storing various 
-                        data types including URLs and UPI payment links.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
-                        <span class="bg-pink-900/30 text-pink-400 px-3 py-1 rounded-full text-sm">NFC</span>
-                        <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Mobile</span>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-purple-400 hover:text-purple-300 transition flex items-center">
-                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
-                        </a>
-                        <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-gray-400 hover:text-gray-300 transition flex items-center">
-                            <i class="fab fa-github mr-2"></i> View Code
-                        </a>
-                    </div>
-                </div>
-                <div class="relative min-h-80 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center order-1 md:order-2">
-                    <div class="relative z-10 p-8">
-                        <img src="/Assets/nfctag.png" alt="NFC App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Movie App -->
-            <div class="glass-card rounded-2xl overflow-hidden grid md:grid-cols-2 gap-8">
-                <div class="p-8 flex flex-col justify-center">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-red-500/20 p-2 rounded-lg mr-4">
-                            <i class="fas fa-film text-red-400 text-2xl"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold">Movie Discovery App</h3>
-                    </div>
-                    <p class="text-gray-300 mb-6">
-                        A ReactJS application that allows users to browse, search, and discover movies with detailed 
-                        information and multimedia content.
-                    </p>
-                    <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">ReactJS</span>
-                        <span class="bg-red-900/30 text-red-400 px-3 py-1 rounded-full text-sm">JavaScript</span>
-                        <span class="bg-orange-900/30 text-orange-400 px-3 py-1 rounded-full text-sm">TMDB API</span>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="https://github.com/jeeva562/movie_app_main" class="text-red-400 hover:text-red-300 transition flex items-center">
-                            <i class="fas fa-external-link-alt mr-2"></i> Live Demo
-                        </a>
-                        <a href="https://github.com/jeeva562/movie_app_main" class="text-gray-400 hover:text-gray-300 transition flex items-center">
-                            <i class="fab fa-github mr-2"></i> View Code
-                        </a>
-                    </div>
-                </div>
-                <div class="relative min-h-80 bg-gradient-to-br from-red-900/40 to-orange-900/40 flex items-center justify-center">
-                    <div class="relative z-10 p-8">
-                        <img src="/Assets/movieapp.png" alt="Movie App" class="rounded-xl shadow-2xl max-h-64 mx-auto">
-                    </div>
-                </div>
-            </div>
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center mb-16 gradient-text">Featured Projects</h2>
+
+    <!-- Temple Finder -->
+    <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center">
+        <div class="flex items-center mb-4">
+          <div class="bg-blue-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-place-of-worship text-blue-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">Temple Finder App</h3>
         </div>
-    </section>
+        <p class="text-gray-300 mb-6">
+          A Flutter application that provides 360° panoramic views of temples, helping pilgrims virtually 
+          explore sacred sites before visiting.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+          <span class="bg-purple-900/30 text-purple-400 px-3 py-1 rounded-full text-sm">Google Street View</span>
+          <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Cross-Platform</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/Temple_Finder" class="text-blue-400 hover:text-blue-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/Temple_Finder" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/Assets/temple finder.avif" type="image/avif">
+            <source srcset="/Assets/temple finder.webp" type="image/webp">
+            <img src="/Assets/temple finder.png" 
+                 alt="Screenshot of Temple Finder App showing panoramic temple view" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+    <!-- NFC App -->
+    <div class="glass-card rounded-2xl overflow-hidden mb-16 grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center order-2 md:order-1">
+        <div class="flex items-center mb-4">
+          <div class="bg-purple-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-wifi text-purple-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">NFC Tag Reader/Writer</h3>
+        </div>
+        <p class="text-gray-300 mb-6">
+          A cross-platform mobile application that reads and writes NFC tags, capable of storing various 
+          data types including URLs and UPI payment links.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">Flutter</span>
+          <span class="bg-pink-900/30 text-pink-400 px-3 py-1 rounded-full text-sm">NFC</span>
+          <span class="bg-green-900/30 text-green-400 px-3 py-1 rounded-full text-sm">Mobile</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-purple-400 hover:text-purple-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/FLUTTER-NFC" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-purple-900/40 to-pink-900/40 flex items-center justify-center order-1 md:order-2">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/Assets/nfctag.avif" type="image/avif">
+            <source srcset="/Assets/nfctag.webp" type="image/webp">
+            <img src="/Assets/nfctag.png" 
+                 alt="NFC Tag Reader app screenshot" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movie App -->
+    <div class="glass-card rounded-2xl overflow-hidden grid md:grid-cols-2 gap-8">
+      <div class="p-8 flex flex-col justify-center">
+        <div class="flex items-center mb-4">
+          <div class="bg-red-500/20 p-2 rounded-lg mr-4">
+            <i class="fas fa-film text-red-400 text-2xl" aria-hidden="true"></i>
+          </div>
+          <h3 class="text-2xl font-bold">Movie Discovery App</h3>
+        </div>
+        <p class="text-gray-300 mb-6">
+          A ReactJS application that allows users to browse, search, and discover movies with detailed 
+          information and multimedia content.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-6">
+          <span class="bg-blue-900/30 text-blue-400 px-3 py-1 rounded-full text-sm">ReactJS</span>
+          <span class="bg-red-900/30 text-red-400 px-3 py-1 rounded-full text-sm">JavaScript</span>
+          <span class="bg-orange-900/30 text-orange-400 px-3 py-1 rounded-full text-sm">TMDB API</span>
+        </div>
+        <div class="flex space-x-4">
+          <a href="https://github.com/jeeva562/movie_app_main" class="text-red-400 hover:text-red-300 transition flex items-center">
+            <i class="fas fa-external-link-alt mr-2" aria-hidden="true"></i> Live Demo
+          </a>
+          <a href="https://github.com/jeeva562/movie_app_main" class="text-gray-400 hover:text-gray-300 transition flex items-center">
+            <i class="fab fa-github mr-2" aria-hidden="true"></i> View Code
+          </a>
+        </div>
+      </div>
+      <div class="relative min-h-80 bg-gradient-to-br from-red-900/40 to-orange-900/40 flex items-center justify-center">
+        <div class="relative z-10 p-8">
+          <picture>
+            <source srcset="/Assets/movieapp.avif" type="image/avif">
+            <source srcset="/Assets/movieapp.webp" type="image/webp">
+            <img src="/Assets/movieapp.png" 
+                 alt="Movie Discovery App interface" 
+                 class="rounded-xl shadow-2xl max-h-64 mx-auto"
+                 loading="lazy" decoding="async" width="400" height="256">
+          </picture>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 
     <!-- Coding Playground -->
     <section id="playground" class="py-20 relative">
@@ -818,6 +843,60 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
         </div>
     </section>
 
+
+        <!-- Globe  -->
+      <section id="globe-section" class="py-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-8 gradient-text">Explore the World</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+                Interact with our 3D Earth globe. Drag to rotate, use arrow keys when focused, or toggle auto-rotation.
+            </p>
+
+            <!-- Globe Container -->
+            <div class="w-full max-w-[600px] mx-auto aspect-square mb-8 relative" id="globe-container">
+                <canvas
+                    id="globe-canvas"
+                    role="img"
+                    aria-label="Interactive three-dimensional globe of Earth that rotates automatically and can be controlled with mouse or keyboard"
+                    tabindex="0"
+                    class="w-full h-full rounded-2xl shadow-2xl"
+                ></canvas>
+                
+                <!-- Loading indicator -->
+                <div id="loading-indicator" class="absolute inset-0 flex items-center justify-center bg-gray-900/80 rounded-2xl">
+                    <div class="text-center">
+                        <div class="loading-spinner mx-auto mb-4"></div>
+                        <p class="text-gray-300">Loading Interactive Globe...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="text-center space-y-4">
+                <button
+                    id="toggle-rotation"
+                    aria-pressed="true"
+                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+                >
+                    <i class="fas fa-pause" id="rotation-icon"></i>
+                    <span id="rotation-text">Pause Rotation</span>
+                </button>
+                
+                <!-- Instructions -->
+                <div class="text-sm text-gray-400 space-y-1">
+                    <p><strong>Mouse/Touch:</strong> Drag to rotate the globe</p>
+                    <p><strong>Keyboard:</strong> Focus the globe and use arrow keys</p>
+                    <p><strong>Accessibility:</strong> Auto-rotation respects motion preferences</p>
+                </div>
+
+                <!-- Screen reader instructions -->
+                <p class="sr-only">
+                    Use your mouse or touch to drag and rotate the globe. You can also focus the globe with Tab and use arrow keys to rotate: left and right arrows rotate horizontally, up and down arrows rotate vertically. Press the toggle button to start or stop automatic rotation. Auto-rotation is automatically disabled if you have motion sensitivity preferences enabled.
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="py-12 bg-gray-900/80 border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-6">
@@ -848,8 +927,8 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
         </div>
     </footer>
 
-  
+        <script type="module" src="globe.js"></script>
+       <script src="app.js"></script><script></script>   
     </body>
-      <script src="app.js"></script><script></script>
     </html>   
        
