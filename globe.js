@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+ document.addEventListener('DOMContentLoaded', () => {
             // Configuration
             const config = {
                 autoRotate: true,
@@ -38,16 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const renderer = new THREE.WebGLRenderer({ 
                 canvas: canvas, 
                 antialias: true,
-                alpha: true
+                alpha: true,
+                powerPreference: "high-performance"
             });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, config.isMobile ? 1.5 : 2));
             
-            // Adjust pixel ratio for performance on mobile
-            if (config.isMobile) {
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-            } else {
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            }
+            // Set initial renderer size
+            updateRendererSize();
             
             // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
@@ -72,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Load textures
                 const textureLoader = new THREE.TextureLoader();
                 
-                // Use smaller texture for mobile if available (but we'll use the same for simplicity)
                 const earthTexture = textureLoader.load(EARTH_TEXTURE, () => {
                     loadingOverlay.style.opacity = '0';
                     setTimeout(() => {
@@ -181,21 +177,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             window.addEventListener('touchmove', onTouchMove, { passive: true });
             
+            // Function to update renderer size
+            function updateRendererSize() {
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
+                
+                // Check if device pixel ratio has changed
+                const pixelRatio = Math.min(window.devicePixelRatio, config.isMobile ? 1.5 : 2);
+                
+                // Only update if dimensions or pixel ratio have changed
+                if (canvas.width !== width || canvas.height !== height || renderer.getPixelRatio() !== pixelRatio) {
+                    renderer.setSize(width, height, false);
+                    renderer.setPixelRatio(pixelRatio);
+                    camera.aspect = width / height;
+                    camera.updateProjectionMatrix();
+                }
+            }
+            
             // Handle window resize
             const onWindowResize = () => {
                 // Update config for mobile detection
                 config.isMobile = window.innerWidth <= 768;
                 
-                camera.aspect = canvas.clientWidth / canvas.clientHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-                
-                // Adjust pixel ratio for performance on mobile
-                if (config.isMobile) {
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-                } else {
-                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                }
+                // Update renderer size
+                updateRendererSize();
             };
             
             window.addEventListener('resize', onWindowResize);
@@ -258,4 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             animate();
+            
+            // Initial size update
+            setTimeout(updateRendererSize, 100);
         });

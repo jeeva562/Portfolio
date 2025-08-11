@@ -860,32 +860,32 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
   <!-- ===== GLOBE SECTION ===== -->
         <div class="container">
         
-        <div class="globe-container">
+       <div class="globe-container">
             <div class="loading-overlay" id="loading">
                 <div class="spinner"></div>
-                <div class="loading-text">Loading Earth...</div>
+                <div class="loading-text">Loading Earth textures...</div>
             </div>
             
             <div class="accessibility-options">
-                <button class="a11y-btn" id="reduce-motion">
-                    <i class="fas fa-running"></i> Reduce Motion
+                <button class="a11y-btn" id="reduce-motion" aria-label="run">
+                    <i class="fas fa-running" aria-hidden="true"></i> Reduce Motion
                 </button>
-                <button class="a11y-btn" id="toggle-rotation">
-                    <i class="fas fa-pause"></i> Pause Rotation
+                <button class="a11y-btn" id="toggle-rotation" aria-label="pause">
+                    <i class="fas fa-pause" aria-hidden="true"></i> Pause Rotation
                 </button>
             </div>
             
             <!-- Mobile touch controls -->
             <div class="mobile-controls">
-                <button class="mobile-control-btn" id="zoom-in">
-                    <i class="fas fa-plus"></i>
+                <button class="mobile-control-btn" id="zoom-in" aria-label="plus">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
                 </button>
-                <button class="mobile-control-btn" id="zoom-out">
-                    <i class="fas fa-minus"></i>
+                <button class="mobile-control-btn" id="zoom-out"aria-label="minus" >
+                    <i class="fas fa-minus" aria-hidden="true"></i>
                 </button>
             </div>
             
-            <canvas id="earth-globe"></canvas>   
+            <canvas id="earth-globe"></canvas>  
         </div>
     </div>
 
