@@ -9,7 +9,7 @@
     <title>Jeeva G | Portfolio</title>
      <link rel="stylesheet" href="style.css">
      <link rel="stylesheet" href="globe.css" />
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-dRvvefSfa1fmutnwrK9lNuPl6jMSC6H5Fm2tZ4yG7o6+8WV+Aqs2F3L4DhhuFGozoJB0Vk69yC6yYH7Xn4n4hg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
      <link rel="preload" as="image" href="/Assets/pic.JPG" type="image/jpg">
      <link rel="icon" type="image/x-icon"  href="/Assets/favicon.ico">
      <link rel="shortcut icon" href="/Assets/favicon.ico" type="image/x-icon">
@@ -844,58 +844,37 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
     </section>
 
 
-        <!-- Globe  -->
-      <section id="globe-section" class="py-20">
-        <div class="max-w-4xl mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center mb-8 gradient-text">Explore the World</h2>
-            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-                Interact with our 3D Earth globe. Drag to rotate, use arrow keys when focused, or toggle auto-rotation.
-            </p>
+        
+  <!-- ===== GLOBE SECTION ===== -->
+  <section class="py-20">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-4xl font-bold mb-8 gradient-text">Explore the World</h2>
 
-            <!-- Globe Container -->
-            <div class="w-full max-w-[600px] mx-auto aspect-square mb-8 relative" id="globe-container">
-                <canvas
-                    id="globe-canvas"
-                    role="img"
-                    aria-label="Interactive three-dimensional globe of Earth that rotates automatically and can be controlled with mouse or keyboard"
-                    tabindex="0"
-                    class="w-full h-full rounded-2xl shadow-2xl"
-                ></canvas>
-                
-                <!-- Loading indicator -->
-                <div id="loading-indicator" class="absolute inset-0 flex items-center justify-center bg-gray-900/80 rounded-2xl">
-                    <div class="text-center">
-                        <div class="loading-spinner mx-auto mb-4"></div>
-                        <p class="text-gray-300">Loading Interactive Globe...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Controls -->
-            <div class="text-center space-y-4">
-                <button
-                    id="toggle-rotation"
-                    aria-pressed="true"
-                    class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-8 py-3 rounded-full font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-                >
-                    <i class="fas fa-pause" id="rotation-icon"></i>
-                    <span id="rotation-text">Pause Rotation</span>
-                </button>
-                
-                <!-- Instructions -->
-                <div class="text-sm text-gray-400 space-y-1">
-                    <p><strong>Mouse/Touch:</strong> Drag to rotate the globe</p>
-                    <p><strong>Keyboard:</strong> Focus the globe and use arrow keys</p>
-                    <p><strong>Accessibility:</strong> Auto-rotation respects motion preferences</p>
-                </div>
-
-                <!-- Screen reader instructions -->
-                <p class="sr-only">
-                    Use your mouse or touch to drag and rotate the globe. You can also focus the globe with Tab and use arrow keys to rotate: left and right arrows rotate horizontally, up and down arrows rotate vertically. Press the toggle button to start or stop automatic rotation. Auto-rotation is automatically disabled if you have motion sensitivity preferences enabled.
-                </p>
-            </div>
+      <!-- canvas wrapper -->
+      <div id="wrap" class="w-full max-w-[600px] mx-auto aspect-square relative">
+        <canvas id="globe-canvas" tabindex="0"
+                aria-label="Interactive 3-D globe" role="img"
+                class="w-full h-full rounded-2xl shadow-xl"></canvas>
+        <!-- loader -->
+        <div id="loader"
+             class="absolute inset-0 flex flex-col items-center justify-center">
+          <div class="spinner mb-4"></div>
+          <p class="text-gray-400">Loading globe…</p>
         </div>
-    </section>
+      </div>
+
+      <!-- toggle button -->
+      <button id="toggle" class="mt-8 inline-flex items-center gap-2
+                                bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 rounded-full
+                                hover:scale-105 transition">
+        <i class="fas fa-pause"></i><span>Pause Rotation</span>
+      </button>
+      <p class="sr-only">
+        Drag the globe to rotate. Focus and use arrow keys to rotate with keyboard.
+        Use the button to pause or resume automatic rotation.
+      </p>
+    </div>
+  </section>
 
     <!-- Footer -->
     <footer class="py-12 bg-gray-900/80 border-t border-gray-800">
