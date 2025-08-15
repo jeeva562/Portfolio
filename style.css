@@ -1,4 +1,4 @@
-:root {
+/* :root {
     
     --primary: #4361ee;
     --secondary: #3a0ca3;
@@ -17,7 +17,7 @@ body {
     padding: 0;
 }
 
-/* 3D Background */
+
 #threejs-container {
     position: fixed;
     top: 0;
@@ -34,7 +34,7 @@ body {
     left: 0;
 }
 
-/* Particles background */
+
 #particles-js {
     position: fixed;
     width: 100%;
@@ -66,7 +66,7 @@ skill-bar {
     transform: translateY(0);
 }
 
- /*nav bar*/
+ 
 nav, section, footer {
             position: relative;
             z-index: 10;
@@ -111,13 +111,13 @@ nav, section, footer {
             60% {transform: translateY(-10px);}
         }
 
-        /* Mobile Menu Styles */
+        
         #mobile-menu {
             transition: all 0.3s ease;
             justify-content: center; 
             align-items: center;
             text-align: center;
-        }
+        } */
 
 :root {
     --primary: #4361ee;
@@ -135,7 +135,7 @@ body {
     overflow-x: hidden;
 }
 
-/* 3D Background */
+
 #threejs-container {
     position: fixed;
     top: 0;
@@ -152,7 +152,7 @@ body {
     left: 0;
 }
 
-/* Particles background */
+
 #particles-js {
     position: fixed;
     width: 100%;
@@ -164,7 +164,7 @@ body {
 }
 
 /* Keep content above background */
-nav, section, footer {
+ nav, section, footer {
     position: relative;
     z-index: 10;
 }
@@ -269,7 +269,7 @@ nav, section, footer {
         .mobile-nav-item.show {
             transform: translateY(0);
             opacity: 1;
-        }
+        } 
         
         /* Custom styles for the result output box */
 /* Enhanced close button styling */
@@ -388,9 +388,9 @@ nav, section, footer {
 }
 
 .pikachu-loader {
-    width: 50px;
+    width: 80px;
     height: auto;
-    max-width: 50px;
+    max-width: 80px;
     display: block;
     margin: 0 auto 0.5rem auto;
 }
@@ -411,8 +411,8 @@ nav, section, footer {
     }
     
     .pikachu-loader {
-        width: 60px;
-        max-width: 60px;
+        width: 80px;
+        max-width: 80px;
     }
     
     .loading-text {
@@ -430,15 +430,15 @@ nav, section, footer {
     }
     
     .pikachu-loader {
-        width: 50%;
-        max-width: 50px;
+        width: 80%;
+        max-width: 80px;
     }
 }
 
 @media (min-width: 1024px) {
     .pikachu-loader {
-        width: 5%;
-        max-width: 50px;
+        width: 80%;
+        max-width: 80px;
     }
 }
 
@@ -479,40 +479,6 @@ nav, section, footer {
     #result-content pre {
         font-size: 1rem;
     }
-}
-
-
-/* Memory Card Animation */
-.memory-card {
-    perspective: 1000px;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
-}
-.memory-card .card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-.memory-card.flipped .card-inner {
-    transform: rotateY(180deg);
-}
-.memory-card .front,
-.memory-card .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-.memory-card .back {
-    transform: rotateY(180deg);
 }
 
 /* Mobile Menu Styles */
