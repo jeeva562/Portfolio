@@ -1,8 +1,9 @@
+ import config from './config.js';
+ 
  // FIXED: Initialize particles.js
 
-          particlesJS('particles-js',
-  
-  {
+ particlesJS('particles-js',{
+    
     "particles": {
       "number": {
         "value": 80,
@@ -109,9 +110,7 @@
       }
     },
     "retina_detect": true,
-    }
-  
-);
+    });
 
 
         // Custom cursor
@@ -487,15 +486,14 @@
 
         
         // --- API Logic ---
-
-const API_KEY = "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";
+const API_KEY = "OPENAI_API_KEY";
 const TEXT_API_URL = "https://api.openai.com/v1/chat/completions";
 const HF_MODELS = [
     "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
     "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
     "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
 ];
-const HF_API_KEY = "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";
+const HF_API_KEY ="HUGGINGFACE_API_KEY";
 
 const promptInput = document.getElementById('prompt-input');
 const sendButton = document.getElementById('send-button');
@@ -685,8 +683,10 @@ window.closeResultBox = closeResultBox;
 
 // Fixed text generation with proper validation
 const handleTextGeneration = async (prompt) => {
-    if (!API_KEY || API_KEY.trim() === "" || API_KEY === "YOUR_OPENAI_API_KEY_HERE") {
-        throw new Error("Please provide a valid OpenAI API key in the API_KEY variable.");
+    const apiKey = config.getOpenAIKey();
+    
+    if (!apiKey) {
+        throw new Error("Please provide a valid OpenAI API key.");
     }
 
     const payload = {
@@ -697,11 +697,11 @@ const handleTextGeneration = async (prompt) => {
         ]
     };
 
-    const response = await fetchWithRetry(TEXT_API_URL, {
+     const response = await fetchWithRetry(TEXT_API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
+            'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify(payload)
     });
@@ -762,9 +762,12 @@ const handleImageAnalysis = async (prompt, imageFile) => {
 
 // Completely rewritten Hugging Face image generation with multiple fallbacks
 const handleImageGenerationWithHF = async (prompt) => {
-    if (!HF_API_KEY || HF_API_KEY.trim() === "") {
+    const apiKey = config.getHuggingFaceKey();
+    
+    if (!apiKey) {
         throw new Error("Please provide a valid Hugging Face API key.");
     }
+    
 
     resultContent.innerHTML = `
         <div class="text-center">
