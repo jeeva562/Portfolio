@@ -13,21 +13,21 @@
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
      <link rel="preload" as="image" href="/Assets/pic.JPG" type="image/jpg">
-     <link rel="icon" type="image/x-icon"  href="/Assets/favicon.ico">
-     <link rel="shortcut icon" href="/Assets/favicon.ico" type="image/x-icon">
-     <link rel="icon" type="image/svg+xml" href="/Assets/favicon.svg">
-     <link rel="mask-icon" href="/Assets/favicon.svg" color="#ffbade">
-     <link rel="icon" type="image/png" sizes="16x16" href="/Assets/favicon-16x16.png">
-     <link rel="icon" type="image/png" sizes="32x32" href="/Assets/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/Assets/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/Assets/android-chrome-512x512.png">
-    <link rel="apple-touch-icon" type="image/png"  href="/Assets/apple-touch-icon.png">
+     <link rel="icon" type="image/x-icon"  href="/favicon/favicon.ico">
+     <link rel="shortcut icon" href="/favicon/favicon.ico" type="image/x-icon">
+     <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+     <link rel="mask-icon" href="/favicon/favicon.svg" color="#ffbade">
+     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon/favicon-512x512.png">
+    <link rel="apple-touch-icon" type="image/png"  href="/favicon/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="manifest" href="/favicon/site.webmanifest">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jeevag-portfolio.netlify.app/">
-    <meta property="og:title" content="jeevag portfolio">
+    <meta property="og:title" content="jeevag-portfolio">
      <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
@@ -62,8 +62,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
  <meta name="google-site-verification" content="RkIvb2MPpfNMXQSP1X8oimbJHGO-AtsVUMb28IktSHA">
 </head>
-<body class="text-gray-100">
-
+<body class="text-gray-100 [scrollbar-width:none] [-ms-overflow-style:none]">
     <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NGD3G9WL"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -78,8 +77,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     
     <!-- Navigation with Mobile Support -->
-    <nav class="fixed w-full glass-card z-40">
-        <div class="max-w-7xl mx-auto px-6 py-4">
+        <nav class="fixed w-full glass-card z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 md:px-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
                     <span class="text-2xl font-bold gradient-text hover-scale cursor-pointer">JG</span>
@@ -137,7 +136,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         <!-- Left column - Content -->
         <div class="text-left space-y-8">
-            <div class="inline-flex items-center gap-3 px-4 py-2 bg-gray-800 rounded-full border border-cyan-400/20 mb-6">
+            <div class="inline-flex items-center gap-10 px-4 py-2 bg-gray-800 rounded-full border border-cyan-400/20 mb-6">
                 <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                 <span class="text-sm font-mono text-cyan-400 tracking-widest">AVAILABLE FOR WORK</span>
             </div>
@@ -676,84 +675,72 @@ class _TempleViewScreenState extends State<TempleViewScreen> {
                     </div>
                 </div>
             </div>
-            
-            <!-- Interactive Games -->
-            <div class="mt-20">
-                <h3 class="text-3xl font-bold text-center mb-12 gradient-text">Interactive Challenges</h3>
-                
-                <div class="grid md:grid-cols-3 gap-6">
-                    <!-- Code Quiz -->
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-blue-500/20 p-3 rounded-full mr-4">
-                                <i class="fas fa-question-circle text-blue-400"></i>
-                            </div>
-                            <h4 class="text-xl font-bold">Flutter Quiz</h4>
-                        </div>
-                        <p class="text-gray-300 mb-6">Test your knowledge of Flutter development with this interactive quiz.</p>
-                        <button id="start-quiz" class="w-full bg-blue-600/20 text-blue-400 py-3 rounded-lg hover:bg-blue-600/30 transition border border-blue-500/30">
-                            Start Quiz <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                        <div id="quiz-container" class="hidden mt-6">
-                            <div id="quiz-question" class="font-medium mb-4 text-lg"></div>
-                            <div id="quiz-options" class="space-y-3"></div>
-                            <div id="quiz-result" class="mt-4 font-bold hidden"></div>
-                            <button id="quiz-next" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hidden w-full">
-                                Next Question
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Code Puzzle -->
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-purple-500/20 p-3 rounded-full mr-4">
-                                <i class="fas fa-puzzle-piece text-purple-400"></i>
-                            </div>
-                            <h4 class="text-xl font-bold">Code Puzzle</h4>
-                        </div>
-                        <p class="text-gray-300 mb-6">Rearrange the code snippets to solve the programming challenge.</p>
-                        <button id="start-puzzle" class="w-full bg-purple-600/20 text-purple-400 py-3 rounded-lg hover:bg-purple-600/30 transition border border-purple-500/30">
-                            Solve Puzzle <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                        <div id="puzzle-container" class="hidden mt-6">
-                            <div class="bg-gray-800/50 p-3 rounded mb-4 text-sm">
-                                <p>Rearrange these lines to create a working Flutter widget:</p>
-                            </div>
-                            <div id="puzzle-pieces" class="space-y-2"></div>
-                            <div id="puzzle-feedback" class="mt-3 text-sm hidden"></div>
-                            <button id="puzzle-check" class="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm w-full">
-                                Check Solution
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Memory Game -->
-                    <div class="glass-card p-6 rounded-2xl">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-green-500/20 p-3 rounded-full mr-4">
-                                <i class="fas fa-brain text-green-400"></i>
-                            </div>
-                            <h4 class="text-xl font-bold">Syntax Memory</h4>
-                        </div>
-                        <p class="text-gray-300 mb-6">Match programming syntax pairs in this memory card game.</p>
-                        <button id="start-memory" class="w-full bg-green-600/20 text-green-400 py-3 rounded-lg hover:bg-green-600/30 transition border border-green-500/30">
-                            Play Game <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                        <div id="memory-game" class="hidden mt-6">
-                            <div class="grid grid-cols-4 gap-2" id="memory-board"></div>
-                            <div class="mt-4 flex justify-between items-center">
-                                <span id="memory-score" class="text-sm text-gray-400">Pairs found: 0/8</span>
-                                <button id="memory-reset" class="bg-green-600 text-white px-3 py-1 rounded text-sm">
-                                    Reset
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
+
+     <!-- Playground Section --->
+     <section id="playground" class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="glass-card max-w-4xl w-full p-4 sm:p-6 md:p-8 rounded-lg text-center">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text mb-4 sm:mb-6 md:mb-8">Playground ✨</h2>
+        <p class="text-base sm:text-lg text-gray-300 mb-4 sm:mb-6 px-2">
+            Let's have some fun! Use this playground.
+        </p>
+        <div class="w-full max-w-2xl mx-auto">
+            <!-- Prompt input container -->
+            <div class="prompt-container flex items-stretch mb-4 rounded-lg">
+                <label for="file-input" class="p-2 sm:p-3 cursor-pointer text-gray-400 icon-button flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                    </svg>
+                </label>
+                <input type="file" id="file-input" accept="image/*" class="hidden">
+                
+                <textarea 
+                    id="prompt-input" 
+                    class="flex-grow p-2 sm:p-3 bg-transparent text-white placeholder-gray-500 focus:outline-none overflow-y-auto prompt-textarea resize-none"
+                    placeholder="Type a prompt here..."
+                    rows="1"
+                ></textarea>
+                
+                <button id="send-button" class="p-2 sm:p-3 cursor-pointer text-gray-400 icon-button flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3v6l15 3-15 3z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Image preview section -->
+            <div id="image-preview" class="mb-4 hidden">
+                <div class="inline-block bg-gray-800 rounded-lg p-3 border border-gray-600">
+                    <img id="preview-image" src="" alt="Image preview" class="max-w-full h-auto max-h-32 sm:max-h-48 rounded-lg mx-auto block">
+                    <button id="clear-image" class="mt-2 text-xs sm:text-sm text-red-400 hover:text-red-500 transition-colors duration-200 block mx-auto">
+                        Remove Image
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading indicator with centered Pikachu -->
+            <div id="loading-indicator" class="hidden mt-4">
+                <div class="loading-container">
+                    <img src="/Assets/pikachu.gif" alt="Loading..." class="pikachu-loader">
+                    <p class="loading-text">Generating response...</p>
+                </div>
+            </div>
+            
+            <!-- Result box -->
+    <div id="result-box" class="hidden result-box p-4 sm:p-6 mt-4 text-left border border-gray-700 rounded-lg relative">
+    <button class="close-button" aria-label="Close result" onclick="closeResultBox()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+    </button>
+    <div id="result-content" class="text-gray-200 text-sm sm:text-base"></div>
+   </div>
+        </div>
+    </div>
+</section>
+
+
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 relative">

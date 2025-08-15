@@ -485,435 +485,414 @@
             });
         }
 
-        // FIXED: Quiz Game with Proper State Management
-        const quizQuestions = [
-            {
-                question: "What is the primary programming language for Flutter development?",
-                options: ["JavaScript", "Dart", "Python", "Java"],
-                answer: 1
-            },
-            {
-                question: "Which widget is used to create a scrollable list in Flutter?",
-                options: ["ListView", "Column", "Row", "Stack"],
-                answer: 0
-            },
-            {
-                question: "What command is used to run a Flutter app?",
-                options: ["flutter start", "flutter run", "flutter launch", "flutter execute"],
-                answer: 1
-            },
-            {
-                question: "Which function is the entry point for a Flutter app?",
-                options: ["main()", "init()", "runApp()", "start()"],
-                answer: 0
-            },
-            {
-                question: "What does the 'setState' method do in Flutter?",
-                options: ["Updates the UI", "Creates a new state", "Destroys the widget", "Navigates to new page"],
-                answer: 0
-            }
-        ];
+        
+        // --- API Logic ---
 
-        let currentQuizQuestion = 0;
-        let quizScore = 0;
-        let quizAnswered = false;
+const API_KEY = "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";
+const TEXT_API_URL = "https://api.openai.com/v1/chat/completions";
+const HF_MODELS = [
+    "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev",
+    "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0",
+    "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5"
+];
+const HF_API_KEY = "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";
 
-        const startQuizBtn = document.getElementById('start-quiz');
-        const quizContainer = document.getElementById('quiz-container');
-        const quizQuestion = document.getElementById('quiz-question');
-        const quizOptions = document.getElementById('quiz-options');
-        const quizResult = document.getElementById('quiz-result');
-        const quizNext = document.getElementById('quiz-next');
+const promptInput = document.getElementById('prompt-input');
+const sendButton = document.getElementById('send-button');
+const loadingIndicator = document.getElementById('loading-indicator');
+const resultBox = document.getElementById('result-box');
+const resultContent = document.getElementById('result-content');
+const fileInput = document.getElementById('file-input');
+const imagePreview = document.getElementById('image-preview');
+const imagePreviewImg = document.getElementById('preview-image');
+const clearImageButton = document.getElementById('clear-image');
 
-        function startQuiz() {
-            if (startQuizBtn) startQuizBtn.classList.add('hidden');
-            if (quizContainer) quizContainer.classList.remove('hidden');
-            currentQuizQuestion = 0;
-            quizScore = 0;
-            loadQuizQuestion();
-        }
+// Encode image as Base64
+const base64EncodeImage = (file) => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+};
 
-        function loadQuizQuestion() {
-            quizAnswered = false;
+// Enhanced fetch with comprehensive error handling
+const fetchWithRetry = async (url, options, retries = 3) => {
+    let lastError;
+    let delay = 1000;
+    
+    for (let i = 0; i < retries; i++) {
+        try {
+            console.log(`Attempting request to: ${url} (attempt ${i + 1})`);
             
-            if (currentQuizQuestion >= quizQuestions.length) {
-                // Quiz completed
-                if (quizQuestion) {
-                    quizQuestion.innerHTML = `
-                        <div class="text-center">
-                            <h3 class="text-2xl font-bold mb-4">Quiz Completed! 🎉</h3>
-                            <p class="text-lg">Final Score: ${quizScore}/${quizQuestions.length}</p>
-                        </div>
-                    `;
-                }
-                if (quizOptions) {
-                    quizOptions.innerHTML = `
-                        <div class="bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-6 rounded-lg border border-blue-500/20">
-                            <div class="text-center">
-                                ${quizScore === quizQuestions.length ? 
-                                    '<p class="text-green-400 text-lg font-medium mb-2">🏆 Perfect Score!</p><p class="text-gray-300">You\'re a Flutter expert!</p>' :
-                                    quizScore >= quizQuestions.length * 0.7 ?
-                                    '<p class="text-blue-400 text-lg font-medium mb-2">🎯 Great Job!</p><p class="text-gray-300">You have solid Flutter knowledge!</p>' :
-                                    '<p class="text-yellow-400 text-lg font-medium mb-2">📚 Keep Learning!</p><p class="text-gray-300">Practice makes perfect!</p>'
-                                }
-                                <button onclick="resetQuiz()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                                    Try Again
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-                if (quizResult) quizResult.classList.add('hidden');
-                if (quizNext) quizNext.classList.add('hidden');
-                return;
-            }
-
-            const question = quizQuestions[currentQuizQuestion];
-            if (quizQuestion) {
-                quizQuestion.innerHTML = `
-                    <div class="mb-2">
-                        <span class="text-sm text-gray-400">Question ${currentQuizQuestion + 1} of ${quizQuestions.length}</span>
-                    </div>
-                    <h3 class="text-lg font-medium">${question.question}</h3>
-                `;
+            const response = await fetch(url, options);
+            
+            // Handle rate limiting
+            if (response.status === 429) {
+                console.warn(`Rate limited. Retry ${i+1}/${retries}`);
+                await new Promise(res => setTimeout(res, delay));
+                delay *= 2;
+                continue;
             }
             
-            if (quizOptions) {
-                let optionsHtml = '';
-                question.options.forEach((option, index) => {
-                    optionsHtml += `
-                        <button class="quiz-option w-full text-left px-4 py-3 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition border border-gray-700 hover:border-gray-600" data-index="${index}">
-                            <span class="font-medium">${String.fromCharCode(65 + index)}.</span> ${option}
-                        </button>
-                    `;
-                });
-                quizOptions.innerHTML = optionsHtml;
-
-                // Add click listeners to options
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        if (quizAnswered) return;
-                        
-                        const selectedIndex = parseInt(this.getAttribute('data-index'));
-                        const correctIndex = question.answer;
-                        quizAnswered = true;
-                        
-                        // Disable all options
-                        document.querySelectorAll('.quiz-option').forEach(opt => {
-                            opt.style.pointerEvents = 'none';
-                            opt.classList.add('opacity-60');
-                        });
-                        
-                        if (selectedIndex === correctIndex) {
-                            this.classList.add('bg-green-500/20', 'border-green-500', 'text-green-400');
-                            this.classList.remove('opacity-60');
-                            if (quizResult) {
-                                quizResult.innerHTML = '<p class="text-green-400"><i class="fas fa-check-circle mr-2"></i>Correct!</p>';
-                                quizResult.classList.remove('hidden');
-                            }
-                            quizScore++;
-                        } else {
-                            this.classList.add('bg-red-500/20', 'border-red-500', 'text-red-400');
-                            this.classList.remove('opacity-60');
-                            // Highlight correct answer
-                            const correctOption = document.querySelector(`.quiz-option[data-index="${correctIndex}"]`);
-                            if (correctOption) {
-                                correctOption.classList.add('bg-green-500/20', 'border-green-500', 'text-green-400');
-                                correctOption.classList.remove('opacity-60');
-                            }
-                            if (quizResult) {
-                                quizResult.innerHTML = '<p class="text-red-400"><i class="fas fa-times-circle mr-2"></i>Incorrect!</p>';
-                                quizResult.classList.remove('hidden');
-                            }
-                        }
-                        
-                        if (quizNext) quizNext.classList.remove('hidden');
-                    });
-                });
+            // Handle server errors
+            if (response.status >= 500) {
+                throw new Error(`Server error: ${response.status} ${response.statusText}`);
             }
             
-            if (quizResult) quizResult.classList.add('hidden');
-            if (quizNext) quizNext.classList.add('hidden');
-        }
-
-        function nextQuestion() {
-            currentQuizQuestion++;
-            loadQuizQuestion();
-        }
-
-        function resetQuiz() {
-            currentQuizQuestion = 0;
-            quizScore = 0;
-            if (startQuizBtn) startQuizBtn.classList.remove('hidden');
-            if (quizContainer) quizContainer.classList.add('hidden');
-        }
-
-        // Event listeners
-        if (startQuizBtn) startQuizBtn.addEventListener('click', startQuiz);
-        if (quizNext) quizNext.addEventListener('click', nextQuestion);
-
-        // FIXED: Code Puzzle Game
-        const puzzleCode = `class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Temple Finder',
-      home: TempleViewScreen(),
-    );
-  }
-}`;
-
-        const startPuzzleBtn = document.getElementById('start-puzzle');
-        const puzzleContainer = document.getElementById('puzzle-container');
-        const puzzlePieces = document.getElementById('puzzle-pieces');
-        const puzzleFeedback = document.getElementById('puzzle-feedback');
-        const puzzleCheck = document.getElementById('puzzle-check');
-
-        function startPuzzle() {
-            if (startPuzzleBtn) startPuzzleBtn.classList.add('hidden');
-            if (puzzleContainer) puzzleContainer.classList.remove('hidden');
-            
-            // Shuffle the code lines
-            const codeLines = puzzleCode.split('\n').filter(line => line.trim() !== '');
-            const shuffledLines = [...codeLines].sort(() => Math.random() - 0.5);
-            
-            if (puzzlePieces) {
-                let piecesHtml = '';
-                shuffledLines.forEach((line, index) => {
-                    piecesHtml += `
-                        <div class="puzzle-piece bg-gray-800/50 p-3 rounded-lg border border-gray-700 cursor-move hover:bg-gray-700/50 transition" draggable="true" data-line="${line.trim()}" data-order="${index}">
-                            <code class="text-sm font-mono text-gray-300">${line}</code>
-                        </div>
-                    `;
-                });
-                puzzlePieces.innerHTML = piecesHtml;
-
-                // Make puzzle pieces draggable
-                initDragAndDrop();
-            }
-            
-            if (puzzleFeedback) puzzleFeedback.classList.add('hidden');
-        }
-
-        function initDragAndDrop() {
-            const pieces = document.querySelectorAll('.puzzle-piece');
-            let draggedPiece = null;
-            
-            pieces.forEach(piece => {
-                piece.addEventListener('dragstart', function() {
-                    draggedPiece = this;
-                    this.style.opacity = '0.5';
-                });
+            // Handle client errors (but don't retry)
+            if (response.status >= 400) {
+                const contentType = response.headers.get('content-type');
+                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
                 
-                piece.addEventListener('dragend', function() {
-                    this.style.opacity = '1';
-                    draggedPiece = null;
-                });
-                
-                piece.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                });
-                
-                piece.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    if (draggedPiece && draggedPiece !== this) {
-                        // Swap the pieces
-                        const tempHTML = this.innerHTML;
-                        const tempLine = this.dataset.line;
-                        
-                        this.innerHTML = draggedPiece.innerHTML;
-                        this.dataset.line = draggedPiece.dataset.line;
-                        
-                        draggedPiece.innerHTML = tempHTML;
-                        draggedPiece.dataset.line = tempLine;
+                try {
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorData.message || errorMessage;
+                    } else {
+                        const text = await response.text();
+                        errorMessage = text || errorMessage;
                     }
-                });
+                } catch (parseError) {
+                    console.warn('Could not parse error response');
+                }
+                
+                throw new Error(errorMessage);
+            }
+            
+            return response;
+            
+        } catch (error) {
+            lastError = error;
+            console.error(`Request failed (attempt ${i + 1}):`, error.message);
+            
+            // Don't retry for certain errors
+            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                // This is likely a CORS issue - don't retry
+                throw new Error('CORS or network error: Unable to connect to the API. This may be due to browser security restrictions.');
+            }
+            
+            if (i === retries - 1) break;
+            
+            await new Promise(res => setTimeout(res, delay));
+            delay *= 2;
+        }
+    }
+    
+    throw lastError;
+};
+
+// Handle send button
+const handleSendPrompt = async () => {
+    const prompt = promptInput.value.trim();
+    const imageFile = fileInput.files[0];
+
+    if (!prompt && !imageFile) return;
+
+    resultBox.classList.add('hidden');
+    resultContent.innerHTML = '';
+    loadingIndicator.classList.remove('hidden');
+    sendButton.disabled = true;
+
+    try {
+        const isImageGen = prompt.toLowerCase().includes('draw') || 
+                           prompt.toLowerCase().includes('sketch') || 
+                           prompt.toLowerCase().includes('generate image') ||
+                           prompt.toLowerCase().includes('create image') ||
+                           prompt.toLowerCase().includes('make image');
+
+        if (isImageGen) {
+            await handleImageGenerationWithHF(prompt);
+        } else if (imageFile) {
+            await handleImageAnalysis(prompt, imageFile);
+        } else {
+            await handleTextGeneration(prompt);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        displayError(error.message);
+    } finally {
+        loadingIndicator.classList.add('hidden');
+        sendButton.disabled = false;
+        clearImage();
+        promptInput.value = '';
+    }
+};
+
+// Enhanced error display function
+const displayError = (errorMessage) => {
+    const isCORSError = errorMessage.toLowerCase().includes('cors') || 
+                       errorMessage.toLowerCase().includes('failed to fetch');
+    
+    let troubleshootingTips = `
+        <div class="error-container">
+            <p class="text-red-400 mb-3"><strong>Error:</strong> ${errorMessage}</p>
+            <div class="troubleshooting-tips">
+                <p class="text-yellow-400 text-sm mb-2"><strong>Troubleshooting Tips:</strong></p>
+                <ul class="text-sm text-gray-300 list-disc ml-4 space-y-1">
+    `;
+    
+    if (isCORSError) {
+        troubleshootingTips += `
+                    <li>This is a browser security restriction (CORS policy)</li>
+                    <li>Try using a browser extension like "CORS Unblock" for testing</li>
+                    <li>Consider deploying your app to a web server instead of opening locally</li>
+                    <li>Use a backend proxy server to make API calls</li>
+        `;
+    } else {
+        troubleshootingTips += `
+                    <li>Check if your Hugging Face API key is valid</li>
+                    <li>The model might be overloaded, try again in a few minutes</li>
+                    <li>Try a simpler prompt</li>
+                    <li>Check your internet connection</li>
+        `;
+    }
+    
+    troubleshootingTips += `
+                    <li>Consider upgrading to Hugging Face Pro for better reliability</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    
+    resultContent.innerHTML = troubleshootingTips;
+    resultBox.classList.remove('hidden');
+};
+
+// Add this function to properly close the result box
+function closeResultBox() {
+    const resultBox = document.getElementById('result-box');
+    if (resultBox) {
+        resultBox.classList.add('hidden');
+        
+        // Optional: Clear the content to free up memory
+        const resultContent = document.getElementById('result-content');
+        if (resultContent) {
+            
+            const images = resultContent.querySelectorAll('img');
+            images.forEach(img => {
+                if (img.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(img.src);
+                }
             });
+            resultContent.innerHTML = '';
         }
+    }
+}
+window.closeResultBox = closeResultBox;
 
-        function checkPuzzleSolution() {
-            const pieces = document.querySelectorAll('.puzzle-piece');
-            const userSolution = Array.from(pieces).map(piece => piece.dataset.line).join('\n');
-            const correctSolution = puzzleCode.split('\n').filter(line => line.trim() !== '').join('\n');
+
+// Fixed text generation with proper validation
+const handleTextGeneration = async (prompt) => {
+    if (!API_KEY || API_KEY.trim() === "" || API_KEY === "YOUR_OPENAI_API_KEY_HERE") {
+        throw new Error("Please provide a valid OpenAI API key in the API_KEY variable.");
+    }
+
+    const payload = {
+        model: "gpt-4o-mini",
+        messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: prompt }
+        ]
+    };
+
+    const response = await fetchWithRetry(TEXT_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    if (result.choices?.length) {
+        const text = result.choices[0].message.content;
+        resultContent.innerHTML = `<pre class="whitespace-pre-wrap text-left p-4 bg-gray-800 rounded-lg">${text}</pre>`;
+    } else {
+        resultContent.textContent = "No response received. Please try again.";
+    }
+    resultBox.classList.remove('hidden');
+};
+
+// Fixed image analysis with proper validation
+const handleImageAnalysis = async (prompt, imageFile) => {
+    if (!API_KEY || API_KEY.trim() === "" || API_KEY === "YOUR_OPENAI_API_KEY_HERE") {
+        throw new Error("Please provide a valid OpenAI API key in the API_KEY variable.");
+    }
+
+    const base64ImageData = await base64EncodeImage(imageFile);
+    const payload = {
+        model: "gpt-4o-mini",
+        messages: [
+            {
+                role: "user",
+                content: [
+                    { type: "text", text: prompt },
+                    { 
+                        type: "image_url", 
+                        image_url: { 
+                            url: `data:${imageFile.type};base64,${base64ImageData}` 
+                        } 
+                    }
+                ]
+            }
+        ]
+    };
+
+    const response = await fetchWithRetry(TEXT_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_KEY}`
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    if (result.choices?.length) {
+        const text = result.choices[0].message.content;
+        resultContent.innerHTML = `<div class="p-4 bg-gray-800 rounded-lg">${text}</div>`;
+    } else {
+        resultContent.textContent = "Could not analyze the image. Please try again.";
+    }
+    resultBox.classList.remove('hidden');
+};
+
+// Completely rewritten Hugging Face image generation with multiple fallbacks
+const handleImageGenerationWithHF = async (prompt) => {
+    if (!HF_API_KEY || HF_API_KEY.trim() === "") {
+        throw new Error("Please provide a valid Hugging Face API key.");
+    }
+
+    resultContent.innerHTML = `
+        <div class="text-center">
+            <p class="text-yellow-400 mb-2">🎨 Generating image...</p>
+            <p class="text-sm text-gray-400">This may take 10-30 seconds</p>
+        </div>
+    `;
+    resultBox.classList.remove('hidden');
+
+    let lastError;
+    
+    // Try each model as fallback
+    for (let i = 0; i < HF_MODELS.length; i++) {
+        const modelUrl = HF_MODELS[i];
+        const modelName = modelUrl.split('/').pop();
+        
+        try {
+            console.log(`Trying model: ${modelName}`);
             
-            if (puzzleFeedback) {
-                if (userSolution === correctSolution) {
-                    puzzleFeedback.innerHTML = `
-                        <div class="bg-green-500/10 p-4 rounded-lg border border-green-500/20">
-                            <p class="text-green-400 font-medium"><i class="fas fa-check-circle mr-2"></i>Perfect! Code arranged correctly!</p>
-                            <button onclick="resetPuzzle()" class="mt-2 bg-green-600 text-white px-4 py-2 rounded text-sm hover:bg-green-700 transition">
-                                Try Another Puzzle
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    puzzleFeedback.innerHTML = `
-                        <div class="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
-                            <p class="text-red-400 font-medium"><i class="fas fa-times-circle mr-2"></i>Not quite right. Keep trying!</p>
-                            <p class="text-gray-400 text-sm mt-1">Hint: Think about the logical order of Flutter widget construction.</p>
-                        </div>
-                    `;
+            resultContent.innerHTML = `
+                <div class="text-center">
+                    <p class="text-yellow-400 mb-2">🎨 Trying model: ${modelName}</p>
+                    <p class="text-sm text-gray-400">Attempt ${i + 1} of ${HF_MODELS.length}</p>
+                </div>
+            `;
+
+            const response = await fetch(modelUrl, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${HF_API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    inputs: prompt,
+                    parameters: {
+                        num_inference_steps: 20,
+                        guidance_scale: 7.5
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Model ${modelName} failed: ${response.status} - ${errorText}`);
+            }
+
+            // Check if response is actually an image
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.startsWith('image/')) {
+                // Try to parse as JSON to get error message
+                const text = await response.text();
+                try {
+                    const errorData = JSON.parse(text);
+                    throw new Error(errorData.error || 'Invalid response format');
+                } catch (parseError) {
+                    throw new Error(`Invalid response: ${text.substring(0, 200)}`);
                 }
-                puzzleFeedback.classList.remove('hidden');
+            }
+
+            // Success! Handle the image
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+
+            resultContent.innerHTML = `
+                <div class="text-center">
+                    <p class="text-green-400 mb-3">✅ Generated successfully with ${modelName}</p>
+                    <p class="text-sm text-gray-400 mb-3">Prompt: "${prompt}"</p>
+                    <img src="${imageUrl}" alt="Generated Image" 
+                         class="rounded-lg shadow-lg mx-auto max-w-full border border-gray-500"
+                         onload="this.style.opacity=1" style="opacity:0;transition:opacity 0.3s">
+                    <p class="text-xs text-gray-500 mt-2">Right-click to save image</p>
+                </div>
+            `;
+            
+            // Success, exit the loop
+            return;
+            
+        } catch (error) {
+            console.error(`Model ${modelName} failed:`, error);
+            lastError = error;
+            
+            // If this isn't the last model, continue to the next one
+            if (i < HF_MODELS.length - 1) {
+                continue;
             }
         }
+    }
+    
+    // If we get here, all models failed
+    throw new Error(`All image generation models failed. Last error: ${lastError.message}`);
+};
 
-        function resetPuzzle() {
-            if (startPuzzleBtn) startPuzzleBtn.classList.remove('hidden');
-            if (puzzleContainer) puzzleContainer.classList.add('hidden');
-        }
+// Event listeners
+sendButton.addEventListener('click', handleSendPrompt);
+promptInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendPrompt();
+    }
+});
 
-        // Event listeners for puzzle
-        if (startPuzzleBtn) startPuzzleBtn.addEventListener('click', startPuzzle);
-        if (puzzleCheck) puzzleCheck.addEventListener('click', checkPuzzleSolution);
+fileInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreviewImg.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
-        // FIXED: Memory Game with Proper Animation
-        const memoryCards = [
-            { icon: '<i class="fas fa-code"></i>', name: 'Code', id: 'code' },
-            { icon: '<i class="fas fa-terminal"></i>', name: 'Terminal', id: 'terminal' },
-            { icon: '<i class="fas fa-database"></i>', name: 'Database', id: 'database' },
-            { icon: '<i class="fas fa-server"></i>', name: 'Server', id: 'server' },
-            { icon: '<i class="fas fa-cloud"></i>', name: 'Cloud', id: 'cloud' },
-            { icon: '<i class="fas fa-mobile-alt"></i>', name: 'Mobile', id: 'mobile' },
-            { icon: '<i class="fas fa-desktop"></i>', name: 'Desktop', id: 'desktop' },
-            { icon: '<i class="fas fa-globe"></i>', name: 'Web', id: 'web' }
-        ];
+clearImageButton.addEventListener('click', clearImage);
 
-        let memoryGameCards = [];
-        let flippedCards = [];
-        let matchedPairs = 0;
-        let canFlip = true;
+function clearImage() {
+    imagePreview.classList.add('hidden');
+    imagePreviewImg.src = '';
+    fileInput.value = '';
+}
 
-        const startMemoryBtn = document.getElementById('start-memory');
-        const memoryGame = document.getElementById('memory-game');
-        const memoryBoard = document.getElementById('memory-board');
-        const memoryScore = document.getElementById('memory-score');
-        const memoryReset = document.getElementById('memory-reset');
+// Initialize the app
+console.log('🚀 AI Playground initialized');
+console.log('💡 Make sure to add your OpenAI API key to the API_KEY variable');
 
-        function startMemoryGame() {
-            if (startMemoryBtn) startMemoryBtn.classList.add('hidden');
-            if (memoryGame) memoryGame.classList.remove('hidden');
-            initializeMemoryGame();
-        }
 
-        function initializeMemoryGame() {
-            // Create pairs and shuffle
-            memoryGameCards = [...memoryCards, ...memoryCards]
-                .sort(() => Math.random() - 0.5)
-                .map((card, index) => ({ ...card, gameId: index, matched: false }));
-            
-            if (memoryBoard) {
-                memoryBoard.innerHTML = '';
-                
-                memoryGameCards.forEach((card, index) => {
-                    const cardElement = document.createElement('div');
-                    cardElement.className = 'memory-card aspect-square cursor-pointer';
-                    cardElement.dataset.gameId = card.gameId;
-                    cardElement.dataset.cardId = card.id;
-                    
-                    cardElement.innerHTML = `
-                        <div class="card-inner w-full h-full">
-                            <div class="front w-full h-full bg-gradient-to-br from-blue-900/50 to-blue-500/50 rounded-lg border border-blue-500/30">
-                                <i class="fas fa-question text-white text-2xl"></i>
-                            </div>
-                            <div class="back w-full h-full bg-gradient-to-br from-purple-900/50 to-purple-500/50 rounded-lg border border-purple-500/30 text-white">
-                                ${card.icon}
-                                <span class="text-xs mt-1">${card.name}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    cardElement.addEventListener('click', () => flipMemoryCard(index));
-                    memoryBoard.appendChild(cardElement);
-                });
-            }
-            
-            flippedCards = [];
-            matchedPairs = 0;
-            canFlip = true;
-            updateMemoryScore();
-        }
 
-        function flipMemoryCard(index) {
-            if (!canFlip || memoryGameCards[index].matched) return;
-            
-            const cardElement = document.querySelector(`[data-game-id="${memoryGameCards[index].gameId}"]`);
-            if (!cardElement || cardElement.classList.contains('flipped')) return;
-            
-            if (flippedCards.length < 2) {
-                cardElement.classList.add('flipped');
-                flippedCards.push(index);
-                
-                if (flippedCards.length === 2) {
-                    canFlip = false;
-                    setTimeout(checkMemoryMatch, 800);
-                }
-            }
-        }
 
-        function checkMemoryMatch() {
-            const [index1, index2] = flippedCards;
-            const card1 = memoryGameCards[index1];
-            const card2 = memoryGameCards[index2];
-            
-            const cardElement1 = document.querySelector(`[data-game-id="${card1.gameId}"]`);
-            const cardElement2 = document.querySelector(`[data-game-id="${card2.gameId}"]`);
-            
-            if (card1.id === card2.id) {
-                // Match found
-                card1.matched = true;
-                card2.matched = true;
-                matchedPairs++;
-                updateMemoryScore();
-                
-                // Add matched styling
-                cardElement1.style.opacity = '0.7';
-                cardElement2.style.opacity = '0.7';
-                cardElement1.style.pointerEvents = 'none';
-                cardElement2.style.pointerEvents = 'none';
-                
-                if (matchedPairs === memoryCards.length) {
-                    setTimeout(() => {
-                        if (memoryBoard) {
-                            memoryBoard.innerHTML = `
-                                <div class="col-span-4 flex flex-col items-center justify-center p-6 bg-gradient-to-br from-green-900/20 to-green-500/20 rounded-lg border border-green-500/30">
-                                    <i class="fas fa-trophy text-yellow-400 text-5xl mb-4 animate-bounce"></i>
-                                    <h4 class="font-bold text-2xl text-green-400 mb-2">Congratulations!</h4>
-                                    <p class="text-gray-300 text-center mb-4">You matched all pairs! 🎉</p>
-                                    <button onclick="resetMemoryGame()" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
-                                        Play Again
-                                    </button>
-                                </div>
-                            `;
-                        }
-                    }, 1000);
-                }
-            } else {
-                // No match
-                setTimeout(() => {
-                    cardElement1.classList.remove('flipped');
-                    cardElement2.classList.remove('flipped');
-                }, 500);
-            }
-            
-            flippedCards = [];
-            canFlip = true;
-        }
-
-        function updateMemoryScore() {
-            if (memoryScore) {
-                memoryScore.textContent = `Pairs found: ${matchedPairs}/${memoryCards.length}`;
-            }
-        }
-
-        function resetMemoryGame() {
-            if (startMemoryBtn) startMemoryBtn.classList.remove('hidden');
-            if (memoryGame) memoryGame.classList.add('hidden');
-        }
-
-        // Event listeners for memory game
-        if (startMemoryBtn) startMemoryBtn.addEventListener('click', startMemoryGame);
-        if (memoryReset) memoryReset.addEventListener('click', initializeMemoryGame);
 
         // FIXED: Contact Form with Proper Error Handling
     const contactForm = document.getElementById('contact-form');
@@ -933,10 +912,9 @@
         formNotification.classList.add('hidden');
 
         try {
-            // Get form data
+    
             const formData = new FormData(contactForm);
             
-            // REPLACE THIS URL WITH YOUR ACTUAL FORMSPREE ENDPOINT
             const FORMSPREE_URL = 'https://formspree.io/f/xnnzoraz';
             
             // Send to Formspree
@@ -1008,201 +986,3 @@
 // ========================================
 
 // Disable right-click context menu
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    
-    // Optional: Show custom message
-    showProtectionMessage('Right-click is disabled');
-    
-    return false;
-});
-
-// Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
-document.addEventListener('keydown', function(e) {
-    // F12 (Developer Tools)
-    if (e.keyCode === 123) {
-        e.preventDefault();
-        showProtectionMessage('Developer tools are disabled');
-        return false;
-    }
-    
-    // Ctrl+Shift+I (Developer Tools)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-        showProtectionMessage('Developer tools are disabled');
-        return false;
-    }
-    
-    // Ctrl+Shift+J (Console)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-        e.preventDefault();
-        showProtectionMessage('Console access is disabled');
-        return false;
-    }
-    
-    // Ctrl+U (View Source)
-    if (e.ctrlKey && e.keyCode === 85) {
-        e.preventDefault();
-        showProtectionMessage('View source is disabled');
-        return false;
-    }
-    
-    // Ctrl+Shift+C (Element Inspector)
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-        e.preventDefault();
-        showProtectionMessage('Element inspector is disabled');
-        return false;
-    }
-    
-    // Ctrl+S (Save Page)
-    if (e.ctrlKey && e.keyCode === 83) {
-        e.preventDefault();
-        showProtectionMessage('Saving page is disabled');
-        return false;
-    }
-});
-
-// Disable text selection (optional)
-document.addEventListener('selectstart', function(e) {
-    e.preventDefault();
-    return false;
-});
-
-// Disable drag and drop
-document.addEventListener('dragstart', function(e) {
-    e.preventDefault();
-    return false;
-});
-
-// Custom protection message display
-function showProtectionMessage(message) {
-    // Remove existing message if any
-    const existingMessage = document.getElementById('protection-message');
-    if (existingMessage) {
-        existingMessage.remove();
-    }
-    
-    // Create and show new message
-    const messageDiv = document.createElement('div');
-    messageDiv.id = 'protection-message';
-    messageDiv.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            z-index: 10000;
-            animation: slideIn 0.3s ease-out;
-        ">
-            <i class="fas fa-shield-alt mr-2"></i>
-            ${message}
-        </div>
-    `;
-    
-    document.body.appendChild(messageDiv);
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        if (messageDiv && messageDiv.parentNode) {
-            messageDiv.remove();
-        }
-    }, 3000);
-}
-
-// Add CSS for the slide-in animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    /* Disable text selection globally */
-    * {
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    
-    /* Allow selection for input fields */
-    input, textarea {
-        -webkit-user-select: text !important;
-        -moz-user-select: text !important;
-        -ms-user-select: text !important;
-        user-select: text !important;
-    }
-`;
-document.head.appendChild(style);
-
-// Advanced protection: Detect developer tools opening
-let devtools = {
-    open: false,
-    orientation: null
-};
-
-// Check if developer tools are open
-setInterval(function() {
-    if (window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200) {
-        if (!devtools.open) {
-            devtools.open = true;
-            // Optional: Redirect or show warning
-            showProtectionMessage('Developer tools detected!');
-            // Uncomment to redirect: window.location.href = "about:blank";
-        }
-    } else {
-        devtools.open = false;
-    }
-}, 500);
-
-// Console warning message
-console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold;');
-console.log('%cThis is a browser feature intended for developers. Content on this page is protected.', 'color: red; font-size: 16px;');
-
-// Disable print
-window.addEventListener('beforeprint', function(e) {
-    e.preventDefault();
-    showProtectionMessage('Printing is disabled');
-    return false;
-});
-
-// Disable save shortcut
-document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.keyCode === 83) {
-        e.preventDefault();
-        showProtectionMessage('Saving is disabled');
-        return false;
-    }
-});
-
-// Protection for mobile devices
-document.addEventListener('touchstart', function(e) {
-    if (e.touches.length > 1) {
-        e.preventDefault(); // Disable multi-touch gestures
-    }
-});
-
-// Disable image dragging
-document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        img.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-        });
-    });
-});
-
-console.log('🔒 Right-click protection and security measures activated');
