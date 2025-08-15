@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-
 :root {
     
     --primary: #4361ee;
@@ -121,7 +118,7 @@ nav, section, footer {
             align-items: center;
             text-align: center;
         }
-=======
+
 :root {
     --primary: #4361ee;
     --secondary: #3a0ca3;
@@ -221,8 +218,6 @@ nav, section, footer {
 .hover-scale:hover {
     transform: scale(1.05);
 }
->>>>>>> c9d925e (code commit)
-
 .code-line {
     opacity: 0;
     transform: translateY(20px);
@@ -233,7 +228,7 @@ nav, section, footer {
     transform: translateY(0);
 }
 
-<<<<<<< HEAD
+
         /* Mobile responsive adjustments */
         @media (max-width: 768px) {
             nav {
@@ -486,8 +481,7 @@ nav, section, footer {
     }
 }
 
-        
-=======
+
 /* Memory Card Animation */
 .memory-card {
     perspective: 1000px;
@@ -575,9 +569,6 @@ nav, section, footer {
     opacity: 1;
 }
 
-
-      
->>>>>>> c9d925e (code commit)
         /*   Hex  hero sec */
          .hexagon-button {
         position: relative;

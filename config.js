@@ -1,24 +1,22 @@
-const config = {
-    
-    getOpenAIKey: () => {
-        const key = localStorage.getItem('openai_key') || 
-                   sessionStorage.getItem('openai_key') || 
-                   prompt('Please enter your OpenAI API key:');
-        if (key && key !== 'YOUR_OPENAI_API_KEY_HERE') {
-            return key;
-        }
-        return null;
-    },
-    
-    getHuggingFaceKey: () => {
-        const key = localStorage.getItem('hf_key') || 
-                   sessionStorage.getItem('hf_key') || 
-                   prompt('Please enter your Hugging Face API key:');
-        if (key && key !== 'hf_your_key_here') {
-            return key;
-        }
+function getKey(storageKey, serviceName, prefix) {
+    const stored = localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey);
+    if (stored && stored.startsWith(prefix) && stored.length > prefix.length + 10) {
+        return stored;
+    }
+    const key = prompt(`Please enter your ${serviceName} API key:`);
+    if (!key || !key.startsWith(prefix)) {
+        alert(`Invalid key format. ${serviceName} keys start with "${prefix}"`);
         return null;
     }
-};
+    if (confirm('Store key permanently in localStorage?')) {
+        localStorage.setItem(storageKey, key);
+    } else {
+        sessionStorage.setItem(storageKey, key);
+    }
+    return key;
+}
 
-export default config;
+export default {
+    getOpenAIKey: () => getKey('openai_key', 'OpenAI', 'sk-'),
+    getHuggingFaceKey: () => getKey('hf_key', 'Hugging Face', 'hf_')
+};
