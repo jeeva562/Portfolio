@@ -2,8 +2,14 @@
  
  // FIXED: Initialize particles.js
 
+<<<<<<< HEAD
  particlesJS('particles-js',{
     
+=======
+          particlesJS('particles-js',
+  
+  {
+>>>>>>> c9d925e (code commit)
     "particles": {
       "number": {
         "value": 80,
@@ -110,7 +116,13 @@
       }
     },
     "retina_detect": true,
+<<<<<<< HEAD
     });
+=======
+    }
+  
+);
+>>>>>>> c9d925e (code commit)
 
 
         // Custom cursor
